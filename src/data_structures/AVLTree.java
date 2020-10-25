@@ -7,7 +7,7 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 	}
 	
 	@Override
-	public void insert(E element,K key) {
+	public void insert(K key,E element) {
 		Node<K,E> newNode = new Node<K,E>(key,element);	
 		if(getRoot() == null) {
 			setRoot(newNode);
@@ -19,8 +19,140 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 	
 	@Override
 	public boolean deleteValue(K key) {
-		return false;
 		
+		if(getRoot()!=null && getRoot().getKey().compareTo(key)==0) {
+			Node<K,E> aux = deleteValue(getRoot(),key);
+			balance(aux);
+			return true;
+		}else {
+			Node<K,E> aux = deleteValue(getRoot(),key);
+			if(aux!=null) {
+				balance(aux);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+
+	private Node<K,E> deleteValue(Node<K,E> root,K value) {
+		if(root==null) {
+			return null;
+		}
+		if(value.compareTo(root.getKey())>0) {
+				return deleteValue(root.getRight(), value);
+				
+		}else if(value.compareTo(root.getKey())<0) {
+				return deleteValue(root.getLeft(),value);
+				
+		}else {
+			if(root.getLeft()!=null && root.getRight()!=null) {
+				return deleteTreeTwoSons(root);	
+				
+			}else if(root.getLeft()!=null) {
+				return deleteTreeOneSon(root);
+				
+			}else if(root.getRight()!=null) {
+				return deleteTreeOneSon(root);
+				
+			}else {
+				return deleteTreeNoSons(root);
+			}
+		}	
+	}
+	
+	private Node<K,E> deleteTreeOneSon(Node<K,E> root) {
+		if(root.getLeft()!=null) {
+			Node <K,E>aux=root.getLeft();
+			Node <K,E> p=root.getParent();
+			p.setLeft(aux);
+			aux.setParent(p);
+			return aux;
+		}else if(root.getRight()!=null) {
+			Node <K,E>aux=root.getRight();
+			Node <K,E> p=root.getParent();
+			p.setRight(aux);;
+			aux.setParent(p);
+			return aux;
+		}
+		return null;
+	}
+	private Node<K,E> deleteTreeTwoSons(Node<K,E> root) {
+		Node<K,E> minRightValue = minimunValue(root.getRight());
+		Node<K,E> result = minRightValue.getParent();
+		if(minRightValue.getRight()!=null) {
+			Node<K,E> temp =minRightValue;
+			deleteTreeOneSon(minRightValue);
+			if(root==this.getRoot()) {
+				temp.setRight(root.getRight());
+				temp.setLeft(root.getLeft());
+				root.getLeft().setParent(temp);
+				root.getRight().setParent(temp);
+				setRoot(temp);
+				temp.setParent(null);
+				
+			}else {
+				temp.setRight(root.getRight());
+				temp.setLeft(root.getLeft());
+				Node<K,E> pop = root.getParent();
+				if(pop.getLeft()==root) {
+					pop.setLeft(temp);
+				}else if(pop.getRight()==root) {
+					pop.setRight(temp);
+				}
+				if(root.getLeft()!=null ) {
+					root.getLeft().setParent(temp);
+				}
+				if(root.getRight()!=null) {
+					root.getRight().setParent(temp);
+				}
+				root=temp;
+				
+			}
+			
+		}else {
+			Node<K,E> temp =minRightValue;
+			deleteTreeNoSons(minRightValue);
+			if(root==this.getRoot()) {
+				temp.setRight(root.getRight());
+				temp.setLeft(root.getLeft());
+				root.getLeft().setParent(temp);
+				root.getRight().setParent(temp);
+				setRoot(temp);
+				temp.setParent(null);
+				
+			}else {
+				temp.setRight(root.getRight());
+				temp.setLeft(root.getLeft());
+				Node<K,E> pop = root.getParent();
+				if(pop.getLeft()==root) {
+					pop.setLeft(temp);
+				}else if(pop.getRight()==root) {
+					pop.setRight(temp);
+				}
+				root.getLeft().setParent(temp);
+				root.getRight().setParent(temp);
+				root=temp;
+				
+			}
+			
+		}
+		return result;
+	}
+	
+	private Node<K,E> deleteTreeNoSons(Node<K,E> node) {
+		Node<K,E> parent = node.getParent();
+		if(node == this.getRoot()) {
+			node = null;
+		}else {
+			
+			if(parent.getLeft()==node) {
+				parent.setLeft(null);
+			}else {
+				parent.setRight(null);
+			}
+		}
+		return parent;
 	}
 	
 	public int balanceFactor (Node<K,E> node) {
@@ -34,12 +166,15 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 	
 	public void balance(Node<K,E> node) {
 		if(node!=null) {
+			
 			int balanceFactor = balanceFactor(node);
 			Node<K,E> parent = node.getParent();
 			if(balanceFactor>1) {
 				rightCases(node.getRight());
+				
 			}else if(balanceFactor<-1) {
 				leftCases(node.getLeft());
+				
 			}
 			balance(parent);
 		}
@@ -47,11 +182,12 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 	
 	public void rightCases(Node<K,E> nodeRight) {
 		int balanceFactor = balanceFactor(nodeRight);
+		Node<K,E> parent = nodeRight.getParent();
 		if(balanceFactor==1 || balanceFactor==0) {
-			leftRotate(nodeRight);
+			leftRotate(nodeRight.getParent());
 		}else{
-			Node<K,E> parent = nodeRight.getParent();
-			rightRotate(nodeRight);
+			
+			rightRotate(nodeRight.getParent());
 			leftRotate(parent);
 		}
 	}
@@ -70,7 +206,7 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 	public void rightRotate(Node <K,E> node) {	
 		Node<K,E> parent =node.getParent();
 		Node <K,E> left = node.getLeft();
-		if(left.getRight()!=null) {
+		if(left.getRight()!=null){
 			Node <K,E> leftRightTree = left.getRight();
 			node.setLeft(leftRightTree);
 			leftRightTree.setParent(node);
@@ -87,6 +223,7 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 			parent.setRight(left);
 		}else {
 			setRoot(left);
+			left.setParent(null);
 		}
 	}
 	
@@ -94,7 +231,6 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 		Node <K,E> right = node.getRight();
 		Node <K,E> parent = node.getParent();
 		if(parent!=null) {
-			
 			if(parent.getRight().equals(node)) {
 				parent.setRight(right);
 				right.setParent(parent);
@@ -104,10 +240,13 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 			}
 		}else{
 			setRoot(right);
+			right.setParent(null);
 		}
 		if(right.getLeft()!=null) {
 			node.setRight(right.getLeft());
 			right.getLeft().setParent(node);
+		}else {
+			node.setRight(null);
 		}
 		right.setLeft(node);
 		node.setParent(right);

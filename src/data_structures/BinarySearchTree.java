@@ -20,7 +20,7 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 	}
 	
 	@Override
-	public void insert(E element, K key) {
+	public void insert( K key, E element) {
 		Node<K,E> newNode = new Node<K,E>(key,element);	
 		if(root == null) {
 			root = newNode;
@@ -94,7 +94,7 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		}	
 	}
 	
-	public boolean deleteTreeOneSon(Node<K,E> root) {
+	private boolean deleteTreeOneSon(Node<K,E> root) {
 		if(root.getLeft()!=null) {
 			Node <K,E>aux=root.getLeft();
 			Node <K,E> p=root.getParent();
@@ -110,7 +110,7 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		}
 		return false;
 	}
-	public boolean deleteTreeTwoSons(Node<K,E> root) {
+	private boolean deleteTreeTwoSons(Node<K,E> root) {
 		Node<K,E> minRightValue = minimunValue(root.getRight());
 		if(minRightValue.getRight()!=null) {
 			Node<K,E> temp =minRightValue;
@@ -167,8 +167,18 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		}
 	}
 	
-	public boolean deleteTreeNoSons(Node<K,E> node) {
-		node = null;
+	private boolean deleteTreeNoSons(Node<K,E> node) {
+		if(node == this.root) {
+			node = null;
+		}else {
+			Node<K,E> parent = node.getParent();
+			if(parent.getLeft()==node) {
+				parent.setLeft(null);
+			}else {
+				parent.setRight(null);
+			}
+		}
+		
 		return true;
 	}
 	
@@ -189,9 +199,8 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		if(currentNode == null) {
 			return 0;
 		}else {
-			heightR(currentNode);
+			return heightR(currentNode);
 		}
-		return 0;
 	}
 	
 	private int heightR(Node<K,E> currentNode) {
@@ -202,7 +211,7 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 			return 1;
 		}else {
 			int left = heightR(currentNode.getLeft());
-			int right = heightR(currentNode.getLeft());
+			int right = heightR(currentNode.getRight());
 			
 			return 1+Math.max(left,right);
 		}
