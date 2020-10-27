@@ -27,22 +27,39 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		}else {
 			insert(newNode, root);
 		}
+		setWeight(getWeight() + 1);
 	}
 	
-	protected void insert(Node<K,E> toAdd,Node<K,E> current) {
+	protected int insert(Node<K,E> toAdd,Node<K,E> current) {
 		if(toAdd.getKey().compareTo(current.getKey()) >= 0) {
 			if(current.getRight()==null) {
 				current.setRight(toAdd);
 				toAdd.setParent(current);
+				if(current.getLeft()==null) {
+					current.setHeight(current.getHeight()+1);
+					return 1;
+				}else {
+					return 0;
+				}
 			}else {
-				insert(toAdd,current.getRight());
+				int aux = insert(toAdd,current.getRight());
+				current.setHeight(current.getHeight()+aux);
+				return aux;
 			}
 		}else {
 			if(current.getLeft()==null) {
 				current.setLeft(toAdd);
 				toAdd.setParent(current);
+				if(current.getRight()==null) {
+					current.setHeight(current.getHeight()+1);
+					return 1;
+				}else {
+					return 0;
+				}
 			}else {
-				insert(toAdd,current.getLeft());
+				int aux = insert(toAdd,current.getLeft());
+				current.setHeight(current.getHeight()+aux);
+				return aux;
 			}
 		}
 	}
@@ -53,7 +70,7 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 			if(root.getLeft()==null) {
 				return root;
 			}else {
-					return minimunValue(root.getLeft());		
+				return minimunValue(root.getLeft());		
 			}
 		}
 		return null;
@@ -64,7 +81,11 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		if(root == null) {
 			return false;
 		}else {
-			return deleteValue(root, key);
+			boolean aux = deleteValue(root, key);
+			if(aux) {
+				weight--;
+			}
+			return aux;
 		}
 	}
 	
@@ -73,11 +94,22 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 			return false;
 		}
 		if(root.getKey().compareTo(value)<0) {
-				return deleteValue(root.getRight(), value);
+				boolean aux = deleteValue(root.getRight(), value);
+				if(aux) {
+					if(root.getRight()!=null && root.getRight().getHeight()<root.getHeight()-1) {
+						root.setHeight(root.getHeight()-1);
+					}
+				}
+				return aux;
 				
 		}else if(root.getKey().compareTo(value)>0) {
-				return deleteValue(root.getLeft(),value);
-				
+			boolean aux = deleteValue(root.getLeft(),value);
+			if(aux) {
+				if(root.getLeft()!=null && root.getLeft().getHeight()<root.getHeight()-1) {
+					root.setHeight(root.getHeight()-1);
+				}
+			}
+			return aux;	
 		}else {
 			if(root.getLeft()!=null && root.getRight()!=null) {
 				return deleteTreeTwoSons(root);	
@@ -120,6 +152,15 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 				temp.setLeft(root.getLeft());
 				root.getLeft().setParent(temp);
 				root.getRight().setParent(temp);
+				int height1 = 1;
+				int height2 = 1;
+				if(temp.getLeft()!=null ) {
+					height1 = temp.getLeft().getHeight();
+				}
+				if(temp.getRight()!=null ) {
+					height2 = temp.getRight().getHeight();
+				}
+				root.setHeight(Math.max(height1, height2)+1);
 				this.root=temp;
 				return true;
 			}else {
@@ -138,6 +179,16 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 					root.getRight().setParent(temp);
 				}
 				root=temp;
+				int height1 = 1;
+				int height2 = 1;
+				if(temp.getLeft()!=null ) {
+					height1 = temp.getLeft().getHeight();
+				}
+				if(temp.getRight()!=null ) {
+					height2 = temp.getRight().getHeight();
+				}
+				root.setHeight(Math.max(height1, height2)+1);
+				this.root=temp;
 				return true;
 			}
 		}else {
@@ -219,7 +270,7 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 
 	@Override
 	public int weight() {
-		return this.weight;
+		return this.getWeight();
 	}
 	//Search method
 	@Override
@@ -306,5 +357,13 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		if(n.getLeft() != null) {
 			preOrder(list, n.getLeft());
 		}
+	}
+
+	public int getWeight() {
+		return weight;
+	}
+
+	public void setWeight(int weight) {
+		this.weight = weight;
 	}
 }

@@ -14,19 +14,21 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 		}else {
 			super.insert(newNode, getRoot());
 		}
+		setWeight(getWeight() + 1);
 		balance(newNode);
 	}
 	
 	@Override
 	public boolean deleteValue(K key) {
-		
 		if(getRoot()!=null && getRoot().getKey().compareTo(key)==0) {
 			Node<K,E> aux = deleteValue(getRoot(),key);
+			setWeight(getWeight() - 1);
 			balance(aux);
 			return true;
 		}else {
 			Node<K,E> aux = deleteValue(getRoot(),key);
 			if(aux!=null) {
+				setWeight(getWeight() - 1);
 				balance(aux);
 				return true;
 			}
