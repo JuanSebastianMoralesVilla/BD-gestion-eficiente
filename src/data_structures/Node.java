@@ -10,7 +10,7 @@ public class Node<K extends Comparable<K>, E>{
 	private Node<K,E> right;
 	
 	public Node(K key, E element) {
-		height =0;
+		height =1;
 		this.element = element;
 		this.key = key;
 	}
