@@ -303,7 +303,6 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 	}
 	
 	private void inOrderR(Node<K,E> current, ArrayList<E> list) {
-		
 		if(current.getLeft()==null) {
 			list.add(current.getElement());
 		}else {
@@ -312,7 +311,6 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		if(current.getRight()!=null) {
 			inOrderR(current.getRight(),list);
 		}
-		
 	}
 
 	@Override
@@ -350,13 +348,14 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		
 		list.add(n.getElement());
 		
+		if(n.getLeft() != null) {
+			preOrder(list, n.getLeft());
+		}
 		if(n.getRight() != null) {
 			preOrder(list, n.getRight());
 		}
 		
-		if(n.getLeft() != null) {
-			preOrder(list, n.getLeft());
-		}
+		
 	}
 
 	public int getWeight() {

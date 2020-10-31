@@ -67,13 +67,22 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 		if(root.getLeft()!=null) {
 			Node <K,E>aux=root.getLeft();
 			Node <K,E> p=root.getParent();
-			p.setLeft(aux);
+			if(p.getRight()==root) {
+				p.setRight(aux);
+			}else {
+				p.setLeft(aux);
+			}
+			
 			aux.setParent(p);
 			return aux;
 		}else if(root.getRight()!=null) {
 			Node <K,E>aux=root.getRight();
 			Node <K,E> p=root.getParent();
-			p.setRight(aux);;
+			if(p.getRight()==root) {
+				p.setRight(aux);
+			}else {
+				p.setLeft(aux);
+			}
 			aux.setParent(p);
 			return aux;
 		}
@@ -84,7 +93,7 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 		Node<K,E> result = minRightValue.getParent();
 		if(minRightValue.getRight()!=null) {
 			Node<K,E> temp =minRightValue;
-			deleteTreeOneSon(minRightValue);
+			result = deleteTreeOneSon(minRightValue);
 			if(root==this.getRoot()) {
 				temp.setRight(root.getRight());
 				temp.setLeft(root.getLeft());
@@ -102,24 +111,29 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 				}else if(pop.getRight()==root) {
 					pop.setRight(temp);
 				}
+				temp.setParent(pop);
 				if(root.getLeft()!=null ) {
 					root.getLeft().setParent(temp);
 				}
 				if(root.getRight()!=null) {
 					root.getRight().setParent(temp);
 				}
-				root=temp;
-				
 			}
-			
+			if(result==root) {
+				result = temp;
+			}
 		}else {
 			Node<K,E> temp =minRightValue;
 			deleteTreeNoSons(minRightValue);
 			if(root==this.getRoot()) {
 				temp.setRight(root.getRight());
 				temp.setLeft(root.getLeft());
-				root.getLeft().setParent(temp);
-				root.getRight().setParent(temp);
+				if(root.getRight()!=null) {
+					root.getRight().setParent(temp);
+				}
+				if(root.getLeft()!=null) {
+					root.getLeft().setParent(temp);
+				}
 				setRoot(temp);
 				temp.setParent(null);
 				
@@ -132,10 +146,16 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 				}else if(pop.getRight()==root) {
 					pop.setRight(temp);
 				}
-				root.getLeft().setParent(temp);
-				root.getRight().setParent(temp);
-				root=temp;
-				
+				temp.setParent(pop);
+				if(temp.getLeft()!=null) {
+					temp.getLeft().setParent(temp);
+				}
+				if(temp.getRight()!=null) {
+					temp.getRight().setParent(temp);
+				}
+			}
+			if(result==root) {
+				result = temp;
 			}
 			
 		}
@@ -154,6 +174,7 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 				parent.setRight(null);
 			}
 		}
+		node.setParent(null);
 		return parent;
 	}
 	
@@ -233,10 +254,10 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 		Node <K,E> right = node.getRight();
 		Node <K,E> parent = node.getParent();
 		if(parent!=null) {
-			if(parent.getRight().equals(node)) {
+			if(parent.getRight()==node) {
 				parent.setRight(right);
 				right.setParent(parent);
-			}else {
+			}else{
 				parent.setLeft(right);
 				right.setParent(parent);
 			}

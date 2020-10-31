@@ -13,8 +13,7 @@ public class User {
 	private LocalDate dayOfBHD;
 	private String picture;
 	public final static String MALE = "male";
-	public final static String FAMALE = "famale";
-	
+	public final static String FAMALE = "femele";
 	
 	public User(String name, String lastName, String gender,double stature, String nationality, LocalDate dayOfBHD, String picture) {
 		super();
