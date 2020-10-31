@@ -42,11 +42,22 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 			return null;
 		}
 		if(value.compareTo(root.getKey())>0) {
-				return deleteValue(root.getRight(), value);
+				Node<K,E> aux = deleteValue(root.getRight(), value);
+				if(aux!=null) {
+					if(root.getRight()!=null && root.getRight().getHeight()<root.getHeight()-1) {
+						root.setHeight(root.getHeight()-1);
+					}
+				}
+				return aux;
 				
 		}else if(value.compareTo(root.getKey())<0) {
-				return deleteValue(root.getLeft(),value);
-				
+				Node<K,E> aux = deleteValue(root.getLeft(),value);
+				if(aux!=null) {
+					if(root.getLeft()!=null && root.getLeft().getHeight()<root.getHeight()-1) {
+						root.setHeight(root.getHeight()-1);
+					}
+				}
+				return aux;	
 		}else {
 			if(root.getLeft()!=null && root.getRight()!=null) {
 				return deleteTreeTwoSons(root);	
@@ -99,6 +110,15 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 				temp.setLeft(root.getLeft());
 				root.getLeft().setParent(temp);
 				root.getRight().setParent(temp);
+				int height1 = 1;
+				int height2 = 1;
+				if(temp.getLeft()!=null ) {
+					height1 = temp.getLeft().getHeight();
+				}
+				if(temp.getRight()!=null ) {
+					height2 = temp.getRight().getHeight();
+				}
+				root.setHeight(Math.max(height1, height2)+1);
 				setRoot(temp);
 				temp.setParent(null);
 				
@@ -118,6 +138,16 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 				if(root.getRight()!=null) {
 					root.getRight().setParent(temp);
 				}
+				int height1 = 1;
+				int height2 = 1;
+				if(temp.getLeft()!=null ) {
+					height1 = temp.getLeft().getHeight();
+				}
+				if(temp.getRight()!=null ) {
+					height2 = temp.getRight().getHeight();
+				}
+				temp.setHeight(Math.max(height1, height2)+1);
+				
 			}
 			if(result==root) {
 				result = temp;

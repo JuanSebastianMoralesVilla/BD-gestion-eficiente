@@ -130,13 +130,21 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		if(root.getLeft()!=null) {
 			Node <K,E>aux=root.getLeft();
 			Node <K,E> p=root.getParent();
-			p.setLeft(aux);
+			if(p.getRight()==root) {
+				p.setRight(aux);
+			}else {
+				p.setLeft(aux);
+			}
 			aux.setParent(p);
 			return true;
 		}else if(root.getRight()!=null) {
 			Node <K,E>aux=root.getRight();
 			Node <K,E> p=root.getParent();
-			p.setRight(aux);;
+			if(p.getRight()==root) {
+				p.setRight(aux);
+			}else {
+				p.setLeft(aux);
+			}
 			aux.setParent(p);
 			return true;
 		}
@@ -178,6 +186,7 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 				if(root.getRight()!=null) {
 					root.getRight().setParent(temp);
 				}
+				temp.setParent(pop);
 				root=temp;
 				int height1 = 1;
 				int height2 = 1;
@@ -247,26 +256,13 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 	
 	
 	public int height(Node<K,E> currentNode) {
-		if(currentNode == null) {
-			return 0;
-		}else {
-			return heightR(currentNode);
+		
+		if(currentNode!=null) {
+			return currentNode.getHeight();
 		}
+		return 0;
 	}
 	
-	private int heightR(Node<K,E> currentNode) {
-		if(currentNode==null) {
-			return 0;
-		}
-		if(currentNode.getLeft()==null && currentNode.getRight()==null) {
-			return 1;
-		}else {
-			int left = heightR(currentNode.getLeft());
-			int right = heightR(currentNode.getRight());
-			
-			return 1+Math.max(left,right);
-		}
-	}
 
 	@Override
 	public int weight() {

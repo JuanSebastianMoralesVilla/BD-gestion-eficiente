@@ -13,10 +13,10 @@ public class User {
 	private LocalDate dayOfBHD;
 	private String picture;
 	public final static String MALE = "male";
-	public final static String FAMALE = "femele";
+	public final static String FEMALE = "female";
 	
-	public User(String name, String lastName, String gender,double stature, String nationality, LocalDate dayOfBHD, String picture) {
-		super();
+	public User(String name, String lastName,String id, String gender,double stature, String nationality, LocalDate dayOfBHD, String picture) {
+		this.id = id;
 		this.name = name;
 		this.lastName = lastName;
 		this.gender = gender;
@@ -99,16 +99,6 @@ public class User {
 
 	public String getId() {
 		return id;
-	}
-
-
-	public static String getMale() {
-		return MALE;
-	}
-
-
-	public static String getFamale() {
-		return FAMALE;
 	}
 
 }
