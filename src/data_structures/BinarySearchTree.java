@@ -268,20 +268,20 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 	public int weight() {
 		return this.getWeight();
 	}
-	//Search method
+	//rch method
 	@Override
-	public Node<K, E> searchValue(K key) {
+	public E searchValue(K key) {
 		if(root==null) {
 			return null;
 		}else {
 			return searchValue(root,key);
 		}
 	}
-	private Node<K,E> searchValue(Node<K,E> root,K key){
+	private E searchValue(Node<K,E> root,K key){
 		if(root==null) {
-			return root;
+			return null;
 		}else if(root.getKey().compareTo(key)==0) {
-			return root;
+			return root.getElement();
 		}else if(root.getKey().compareTo(key)>0) {
 			return searchValue(root.getLeft(),key);
 		}else {
@@ -353,7 +353,16 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		
 		
 	}
-
+	
+	public ArrayList<K> sensitiveSearch(K key){
+		ArrayList<K> array = new ArrayList<>();
+		Node<K,E> current = searchValueSensitive(this.root,key);
+		return null;
+		
+	}
+	private Node<K,E> searchValueSensitive(Node<K,E> root,K key){
+		return null;
+	}
 	public int getWeight() {
 		return weight;
 	}

@@ -14,6 +14,8 @@ public class User {
 	private String picture;
 	public final static String MALE = "male";
 	public final static String FEMALE = "female";
+	public final static double MIN_STATURE = 50;
+	public final static double MAX_STATURE = 300;
 	
 	public User(String name, String lastName,String id, String gender,double stature, String nationality, LocalDate dayOfBHD, String picture) {
 		this.id = id;
