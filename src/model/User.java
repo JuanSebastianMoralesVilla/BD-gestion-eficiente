@@ -28,66 +28,53 @@ public class User {
 		this.picture = picture;
 	}
 
-
 	public String getName() {
 		return name;
 	}
-
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-
 	public String getLastName() {
 		return lastName;
 	}
-
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 
-
 	public String getGender() {
 		return gender;
 	}
-
 
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
 
-
 	public double getStature() {
 		return stature;
 	}
-
 
 	public void setStature(double stature) {
 		this.stature = stature;
 	}
 
-
 	public String getNationality() {
 		return nationality;
 	}
-
 
 	public void setNationality(String nationality) {
 		this.nationality = nationality;
 	}
 
-
 	public LocalDate getDayOfBHD() {
 		return dayOfBHD;
 	}
 
-
 	public void setDayOfBHD(LocalDate dayOfBHD) {
 		this.dayOfBHD = dayOfBHD;
 	}
-
 
 	public String getPicture() {
 		return picture;
@@ -98,10 +85,8 @@ public class User {
 		this.picture = picture;
 	}
 
-
 	public String getId() {
 		return id;
 	}
-
 }
  

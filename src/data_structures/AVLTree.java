@@ -20,7 +20,7 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 	
 	@Override
 	public boolean deleteValue(K key) {
-		if(getRoot()!=null && getRoot().getKey().compareTo(key)==0) {
+		if(getRoot()!=null && getRoot().getKey().toString().compareTo(key.toString())==0) {
 			Node<K,E> aux = deleteValue(getRoot(),key);
 			setWeight(getWeight() - 1);
 			balance(aux);
@@ -41,7 +41,7 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 		if(root==null) {
 			return null;
 		}
-		if(value.compareTo(root.getKey())>0) {
+		if(value.toString().compareTo(root.getKey().toString())>0) {
 				Node<K,E> aux = deleteValue(root.getRight(), value);
 				if(aux!=null) {
 					if(root.getRight()!=null && root.getRight().getHeight()<root.getHeight()-1) {
@@ -50,7 +50,7 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 				}
 				return aux;
 				
-		}else if(value.compareTo(root.getKey())<0) {
+		}else if(value.toString().compareTo(root.getKey().toString())<0) {
 				Node<K,E> aux = deleteValue(root.getLeft(),value);
 				if(aux!=null) {
 					if(root.getLeft()!=null && root.getLeft().getHeight()<root.getHeight()-1) {
@@ -210,8 +210,8 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 	
 	public int balanceFactor (Node<K,E> node) {
 		if(node!=null) {
-			int right = super.height(node.getRight());
-			int left = super.height(node.getLeft());
+			int right = height(node.getRight());
+			int left = height(node.getLeft());
 			return right - left;
 		}
 		return 0;
@@ -239,8 +239,7 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 		if(balanceFactor==1 || balanceFactor==0) {
 			leftRotate(nodeRight.getParent());
 		}else{
-			
-			rightRotate(nodeRight.getParent());
+			rightRotate(nodeRight);
 			leftRotate(parent);
 		}
 	}
@@ -278,6 +277,24 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 			setRoot(left);
 			left.setParent(null);
 		}
+		int auxHeight1 = 0;
+		int auxHeight2 = 0;
+		if(node.getLeft()!=null) {
+			auxHeight1 = node.getLeft().getHeight();
+		}
+		if(node.getRight()!=null) {
+			auxHeight2 = node.getRight().getHeight();
+		}
+		node.setHeight(Math.max(auxHeight1, auxHeight2)+1);
+		auxHeight1 = 0;
+		auxHeight2 = 0;
+		if(left.getLeft()!=null) {
+			auxHeight1 = left.getLeft().getHeight();
+		}
+		if(left.getRight()!=null) {
+			auxHeight2 = left.getRight().getHeight();
+		}
+		left.setHeight(Math.max(auxHeight1, auxHeight2)+1);
 	}
 	
 	public void leftRotate(Node <K,E> node) {
@@ -303,6 +320,24 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 		}
 		right.setLeft(node);
 		node.setParent(right);
+		int auxHeight1 = 0;
+		int auxHeight2 = 0;
+		if(node.getLeft()!=null) {
+			auxHeight1 = node.getLeft().getHeight();
+		}
+		if(node.getRight()!=null) {
+			auxHeight2 = node.getRight().getHeight();
+		}
+		node.setHeight(Math.max(auxHeight1, auxHeight2)+1);
+		auxHeight1 = 0;
+		auxHeight2 = 0;
+		if(right.getLeft()!=null) {
+			auxHeight1 = right.getLeft().getHeight();
+		}
+		if(right.getRight()!=null) {
+			auxHeight2 = right.getRight().getHeight();
+		}
+		right.setHeight(Math.max(auxHeight1, auxHeight2)+1);
 	}
 	
 }	
