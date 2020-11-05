@@ -12,6 +12,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -39,8 +40,8 @@
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="Prueba">
                      <children>
                         <ProgressBar fx:id="lineProgress" layoutX="67.0" layoutY="443.0" prefHeight="27.0" prefWidth="531.0" progress="0.0" />
-                        <Button fx:id="btSaveData" layoutX="414.0" layoutY="56.0" mnemonicParsing="false" text="GUARDAR" />
-                        <Button fx:id="btGenerateData" layoutX="415.0" layoutY="342.0" mnemonicParsing="false" text="GENERAR" />
+                        <Button fx:id="btSaveData" layoutX="414.0" layoutY="56.0" mnemonicParsing="false" onAction="#saveData" text="GUARDAR" />
+                        <Button fx:id="btGenerateData" layoutX="415.0" layoutY="342.0" mnemonicParsing="false" onAction="#generateData" text="GENERAR" />
                         <TextField fx:id="txtCantGenerate" layoutX="35.0" layoutY="169.0" prefHeight="25.0" prefWidth="121.0" text="1000000000" />
                         <Label layoutX="35.0" layoutY="135.0" text="Cuantos datos desea generar: " />
                         <Label layoutX="35.0" layoutY="325.0" text="Time:" />
@@ -58,8 +59,11 @@
                         <Label layoutX="538.0" layoutY="388.0" text="Codigo:" />
                         <Label layoutX="314.0" layoutY="256.0" text="Apellido:" />
                         <Label layoutX="102.0" layoutY="301.0" text="Genero:" />
-                        <RadioButton fx:id="tgFemale" layoutX="236.0" layoutY="301.0" mnemonicParsing="false" text="Femenino" />
-                        <RadioButton fx:id="tgMale" layoutX="156.0" layoutY="301.0" mnemonicParsing="false" text="Masculino" />
+                        <RadioButton fx:id="tgFemale" layoutX="236.0" layoutY="301.0" mnemonicParsing="false" text="Femenino">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="tgGender" />
+                           </toggleGroup></RadioButton>
+                        <RadioButton fx:id="tgMale" layoutX="156.0" layoutY="301.0" mnemonicParsing="false" text="Masculino" toggleGroup="$tgGender" />
                         <Label layoutX="43.0" layoutY="388.0" text="Fecha de nacimiento:" />
                         <Label layoutX="108.0" layoutY="346.0" text="Estatura:" />
                         <DatePicker fx:id="txtDateBHD" layoutX="165.0" layoutY="384.0" />
@@ -67,14 +71,14 @@
                         <TextField fx:id="txtName" layoutX="157.0" layoutY="252.0" />
                         <TextField fx:id="btCodigo" disable="true" editable="false" layoutX="526.0" layoutY="405.0" prefHeight="25.0" prefWidth="66.0" />
                         <Spinner fx:id="txtHeight" layoutX="161.0" layoutY="342.0" />
-                        <Button fx:id="btAddUser" layoutX="281.0" layoutY="442.0" mnemonicParsing="false" text="AGREGAR USUARIO" />
-                        <ImageView fitHeight="208.0" fitWidth="213.0" layoutX="252.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true" styleClass="Prueba" AnchorPane.leftAnchor="252.0">
+                        <Button fx:id="btAddUser" layoutX="281.0" layoutY="442.0" mnemonicParsing="false" onAction="#addUser" text="AGREGAR USUARIO" />
+                        <ImageView fx:id="imageviewLoad" fitHeight="208.0" fitWidth="213.0" layoutX="252.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true" styleClass="Prueba" AnchorPane.leftAnchor="252.0">
                            <effect>
                               <DropShadow color="#cd0505" />
                            </effect>
                         </ImageView>
                         <Label layoutX="115.0" layoutY="49.0" text="Seleccione una imagen" />
-                        <Button layoutX="151.0" layoutY="85.0" mnemonicParsing="false" text="Imagen" />
+                        <Button fx:id="btImage" layoutX="151.0" layoutY="85.0" mnemonicParsing="false" text="Imagen" />
                      </children>
                   </AnchorPane>
             </content>
@@ -83,17 +87,17 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="Prueba">
                      <children>
-                        <Button fx:id="btBuscar" layoutX="501.0" layoutY="75.0" mnemonicParsing="false" text="Buscar" />
+                        <Button fx:id="btBuscar" layoutX="501.0" layoutY="75.0" mnemonicParsing="false" onAction="#searchUser" text="Buscar" />
                         <TextField fx:id="txtBuscar" layoutX="104.0" layoutY="75.0" prefHeight="25.0" prefWidth="378.0" />
                         <TableView fx:id="tableUsers" layoutX="104.0" layoutY="134.0" prefHeight="329.0" prefWidth="309.0">
                           <columns>
-                            <TableColumn prefWidth="84.0" text="CODIGO" />
-                              <TableColumn prefWidth="119.0" text="Nombre" />
-                              <TableColumn prefWidth="105.0" text="Apellido" />
+                            <TableColumn fx:id="cvID" prefWidth="84.0" text="CODIGO" />
+                              <TableColumn fx:id="cvName" prefWidth="119.0" text="Nombre" />
+                              <TableColumn fx:id="cvLastName" prefWidth="105.0" text="Apellido" />
                           </columns>
                         </TableView>
                         <Label layoutX="98.0" layoutY="35.0" text="Usuario a buscar" />
-                        <Button fx:id="btActualizeData" layoutX="476.0" layoutY="216.0" mnemonicParsing="false" text="Actualizar datos" />
+                        <Button fx:id="btActualizeData" layoutX="476.0" layoutY="216.0" mnemonicParsing="false" onAction="#updateUser" text="Actualizar datos" />
                      </children>
                   </AnchorPane>
               </content>
@@ -106,22 +110,25 @@
                         <Label layoutX="37.0" layoutY="39.0" text="Codigo:" />
                         <Label layoutX="35.0" layoutY="340.0" text="Apellido:" />
                         <Label layoutX="37.0" layoutY="187.0" text="Genero:" />
-                        <RadioButton fx:id="tgFemale1" layoutX="33.0" layoutY="211.0" mnemonicParsing="false" text="Femenino" />
-                        <RadioButton fx:id="tgMale1" layoutX="141.0" layoutY="211.0" mnemonicParsing="false" text="Masculino" />
+                        <RadioButton fx:id="tgFemale1" layoutX="33.0" layoutY="211.0" mnemonicParsing="false" text="Femenino">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="tgGenderA" />
+                           </toggleGroup></RadioButton>
+                        <RadioButton fx:id="tgMale1" layoutX="141.0" layoutY="211.0" mnemonicParsing="false" text="Masculino" toggleGroup="$tgGenderA" />
                         <Label layoutX="33.0" layoutY="244.0" text="Fecha de cumpleaños:" />
                         <Label layoutX="36.0" layoutY="383.0" text="Estatura:" />
-                        <DatePicker fx:id="txtDateBHD1" layoutX="151.0" layoutY="240.0" />
-                        <TextField fx:id="txtLastName1" editable="false" layoutX="151.0" layoutY="282.0" />
-                        <TextField fx:id="txtName1" layoutX="142.0" layoutY="328.0" />
-                        <TextField fx:id="btCodigo1" editable="false" layoutX="37.0" layoutY="63.0" prefHeight="25.0" prefWidth="66.0" />
-                        <Spinner fx:id="txtHeight1" layoutX="131.0" layoutY="379.0" />
-                        <Button fx:id="btAddUser1" layoutX="135.0" layoutY="438.0" mnemonicParsing="false" text="CONFIRMAR " />
+                        <DatePicker fx:id="txtDateBHDA" layoutX="151.0" layoutY="240.0" />
+                        <TextField fx:id="txtLastNameA" editable="false" layoutX="151.0" layoutY="282.0" />
+                        <TextField fx:id="txtNameA" layoutX="142.0" layoutY="328.0" />
+                        <TextField fx:id="btCodigoA" editable="false" layoutX="37.0" layoutY="63.0" prefHeight="25.0" prefWidth="66.0" />
+                        <Spinner fx:id="txtHeightA" layoutX="131.0" layoutY="379.0" />
+                        <Button fx:id="btConfirmUser" layoutX="135.0" layoutY="438.0" mnemonicParsing="false" onAction="#confirmUdpateUser" text="CONFIRMAR " />
                         <ImageView fitHeight="208.0" fitWidth="213.0" layoutX="332.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true" styleClass="Prueba">
                            <effect>
                               <DropShadow color="#cd0505" />
                            </effect>
                         </ImageView>
-                        <Button fx:id="btAddUser11" layoutX="474.0" layoutY="451.0" mnemonicParsing="false" text="ELIMINAR USUARIO" />
+                        <Button fx:id="btDeleteUser" layoutX="474.0" layoutY="451.0" mnemonicParsing="false" onAction="#deleteUser" text="ELIMINAR USUARIO" />
                      </children>
                   </AnchorPane>
               </content>
