@@ -132,10 +132,10 @@ public class DataBaseGUI {
 
 	@FXML
 	private Button btDeleteUser;
-	
-	 // --------------------
+
+	// --------------------
 	// Metodos de clase GUI
-   // ---------------------
+	// ---------------------
 
 	@FXML
 	void addUser(ActionEvent event) {
