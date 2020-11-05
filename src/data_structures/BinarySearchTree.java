@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearchTree<K, E> {
 	private Node<K,E> root;
+	
 	public Node<K, E> getRoot() {
 		return root;
 	}
