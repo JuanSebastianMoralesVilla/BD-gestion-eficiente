@@ -9,6 +9,8 @@ import threads.SearchingThread;
 public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearchTree<K, E> {
 	private Node<K,E> root;
 	private boolean searching;
+	
+	
 	public Node<K, E> getRoot() {
 		return root;
 	}
@@ -368,21 +370,20 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		Node<K,E> current = searchValueSensitive(this.root,key);
 		if(current!=null) {
 			searching = true;
-			array.add(current.getElement());
-			SearchingThread<K,E> searchingThread1 = new SearchingThread<K,E>(this,current.getLeft(), key, array);
-			SearchingThread<K,E> searchingThread2 = new SearchingThread<K,E>(this,current.getRight(), key, array);
-			searchingThread1.start();
-			searchingThread2.start();
-			RunningThread<K,E> rt = new RunningThread<>(this, array);
-			rt.start();
-			/*
-			if(current.getHeight()>100) {
+			if(current.getHeight()>1) {
+				
+				array.add(current.getElement());
+				SearchingThread<K,E> searchingThread1 = new SearchingThread<K,E>(this,current.getLeft(), key, array);
+				SearchingThread<K,E> searchingThread2 = new SearchingThread<K,E>(this,current.getRight(), key, array);
+				searchingThread1.start();
+				searchingThread2.start();
+				RunningThread<K,E> rt = new RunningThread<>(this, searchingThread1,searchingThread2);
+				rt.start();
 				
 			}else {
 				searchValuesSensitiveR(array,current,key);
+				stopSearch();
 			}
-			*/
-			
 		}
 		return array;
 	}

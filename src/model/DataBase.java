@@ -1,10 +1,12 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.Random;
 
 import custom_exceptions.InvalidValueException;
 import custom_exceptions.ValuesIsEmptyException;
 import data_structures.AVLTree;
+import threads.CreatingUserThread;
 
 public class DataBase {
 	private AVLTree<String, User> usersByID;
@@ -58,7 +60,6 @@ public class DataBase {
 		usersByFullName.insert(name+" "+lastName,newUser);
 	}
 	/**
-	 * 
 	 * @param type
 	 * @param key
 	 * @return
@@ -91,12 +92,42 @@ public class DataBase {
 		user.setDayOfBHD(dayOfBHD);
 		user.setPicture(picture);
 	}
-	
+	//String name, String lastName,String id, String gender,double stature, String nationality, LocalDate dayOfBHD, String picture
 	public void generateUsers(int ammount) {
 		
+		
+		CreatingUserThread<String, User> userById;
+		CreatingUserThread<String, User> userByName;
+		CreatingUserThread<String, User> userByLastName;
+		CreatingUserThread<String, User> userByFullName;
+		for (int i = 0; i < ammount; i++) {
+			String[] fullName = generateFullNames();
+			String name = fullName[0];
+			String lastName = fullName[1];
+			String nationality = generateNationality();
+			String gender = fullName[2];
+			String id = generateID(nationality);
+			double stature = generateStature();
+			LocalDate dayOfBHD = generateAge();
+			String picture = generateImage();
+			User user = new User(name,lastName,id,gender,stature,nationality,dayOfBHD,picture);
+			userById = new CreatingUserThread<String, User>(this.usersByID, id, user);
+			userByName = new CreatingUserThread<String, User>(this.usersByName, id, user);
+			userByLastName = new CreatingUserThread<String, User>(this.usersByLastName, id, user);
+			userByFullName = new CreatingUserThread<String, User>(this.usersByFullName, id, user);
+			userById.start();
+			userByName.start();
+			userByLastName.start();
+			userByFullName.start();
+			while(userById.isAlive() || userByName.isAlive() ||  userByLastName.isAlive() ||  userByFullName.isAlive()) {
+				System.out.println("Waiting...");
+			}
+		}
 	}
 	
+	//Order is Name>LastName>Gender
 	private String[] generateFullNames() {
+		Random random = new Random();
 		return null;
 	}
 	

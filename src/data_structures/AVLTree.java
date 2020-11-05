@@ -269,7 +269,8 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 		node.setParent(left);
 		left.setParent(parent);
 		
-		if(parent!=null && node==parent.getLeft()) {
+		
+		if(parent!=null && node==parent .getLeft()) {
 			parent.setLeft(left);
 		}else if(parent!=null && node==parent.getRight()) {
 			parent.setRight(left);
