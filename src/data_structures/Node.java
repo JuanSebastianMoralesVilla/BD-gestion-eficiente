@@ -63,4 +63,18 @@ public class Node<K extends Comparable<K>, E>{
 		this.height = height;
 	}
 	
+	public int startsWith(K prefix) {
+		int result = 0;
+		String currentKey = key.toString();
+		String prefixR = prefix.toString();
+		if(!currentKey.startsWith(prefixR)) {
+			if(prefixR.compareTo(currentKey)<0) {
+				result = -1;
+			}else {
+				result = 1;
+			}
+		}
+		return result;
+		
+	}
 }
