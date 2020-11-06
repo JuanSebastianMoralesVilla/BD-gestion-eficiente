@@ -14,6 +14,7 @@ public class DataBase {
 	private AVLTree<String, User> usersByLastName;
 	private AVLTree<String, User> usersByFullName;
 	
+	private double seachingAvance;
 	private int[] currentIDs;
 	public final static int AMMOUNT_COUNTRIES =35;
 	
@@ -27,6 +28,7 @@ public class DataBase {
 		usersByLastName = new AVLTree<>();
 		usersByFullName = new AVLTree<>();
 		currentIDs = new int[110];
+		seachingAvance = 0;
 	}
 	/**
 	 * 
@@ -122,6 +124,7 @@ public class DataBase {
 			while(userById.isAlive() || userByName.isAlive() ||  userByLastName.isAlive() ||  userByFullName.isAlive()) {
 				System.out.println("Waiting...");
 			}
+			seachingAvance = Double.parseDouble(i+"")/Double.parseDouble(ammount+"");
 		}
 	}
 	
@@ -157,6 +160,9 @@ public class DataBase {
 	
 	public void saveData() {
 		
+	}
+	public double getSeachingAvance() {
+		return seachingAvance;
 	}
 	
 }

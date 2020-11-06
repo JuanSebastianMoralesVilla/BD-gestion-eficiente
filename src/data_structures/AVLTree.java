@@ -269,7 +269,6 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 		node.setParent(left);
 		left.setParent(parent);
 		
-		
 		if(parent!=null && node==parent .getLeft()) {
 			parent.setLeft(left);
 		}else if(parent!=null && node==parent.getRight()) {
@@ -278,67 +277,60 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 			setRoot(left);
 			left.setParent(null);
 		}
-		int auxHeight1 = 0;
-		int auxHeight2 = 0;
+		int height1 = 0;
+		int height2 = 0;
 		if(node.getLeft()!=null) {
-			auxHeight1 = node.getLeft().getHeight();
+			height1 = node.getLeft().getHeight();
 		}
-		if(node.getRight()!=null) {
-			auxHeight2 = node.getRight().getHeight();
+		if(node.getRight()!= null ){
+			height2 = node.getRight().getHeight();
 		}
-		node.setHeight(Math.max(auxHeight1, auxHeight2)+1);
-		auxHeight1 = 0;
-		auxHeight2 = 0;
+		node.setHeight(Math.max(height1, height2)+1);
+		height1 = 0;
+		height2 = node.getHeight();
 		if(left.getLeft()!=null) {
-			auxHeight1 = left.getLeft().getHeight();
+			height1 = left.getLeft().getHeight();
 		}
-		if(left.getRight()!=null) {
-			auxHeight2 = left.getRight().getHeight();
-		}
-		left.setHeight(Math.max(auxHeight1, auxHeight2)+1);
+		left.setHeight(Math.max(height1, height2)+1);
+		
 	}
 	
 	public void leftRotate(Node <K,E> node) {
+		Node<K,E> parent =node.getParent();
 		Node <K,E> right = node.getRight();
-		Node <K,E> parent = node.getParent();
-		if(parent!=null) {
-			if(parent.getRight()==node) {
-				parent.setRight(right);
-				right.setParent(parent);
-			}else{
-				parent.setLeft(right);
-				right.setParent(parent);
-			}
-		}else{
-			setRoot(right);
-			right.setParent(null);
-		}
-		if(right.getLeft()!=null) {
-			node.setRight(right.getLeft());
-			right.getLeft().setParent(node);
+		if(right.getLeft()!=null){
+			Node <K,E> rightLeftTree = right.getLeft();
+			node.setRight(rightLeftTree);
+			rightLeftTree.setParent(node);
 		}else {
 			node.setRight(null);
 		}
 		right.setLeft(node);
 		node.setParent(right);
-		int auxHeight1 = 0;
-		int auxHeight2 = 0;
+		right.setParent(parent);
+		if(parent!=null && node==parent .getLeft()) {
+			parent.setLeft(right);
+		}else if(parent!=null && node==parent.getRight()) {
+			parent.setRight(right);
+		}else {
+			setRoot(right);
+			right.setParent(null);
+		}
+		int height1 = 0;
+		int height2 = 0;
 		if(node.getLeft()!=null) {
-			auxHeight1 = node.getLeft().getHeight();
+			height1 = node.getLeft().getHeight();
 		}
-		if(node.getRight()!=null) {
-			auxHeight2 = node.getRight().getHeight();
+		if(node.getRight()!= null ){
+			height2 = node.getRight().getHeight();
 		}
-		node.setHeight(Math.max(auxHeight1, auxHeight2)+1);
-		auxHeight1 = 0;
-		auxHeight2 = 0;
-		if(right.getLeft()!=null) {
-			auxHeight1 = right.getLeft().getHeight();
-		}
+		node.setHeight(Math.max(height1, height2)+1);
+		height1 = 0;
+		height2 = node.getHeight();
 		if(right.getRight()!=null) {
-			auxHeight2 = right.getRight().getHeight();
+			height1 = right.getRight().getHeight();
 		}
-		right.setHeight(Math.max(auxHeight1, auxHeight2)+1);
+		right.setHeight(Math.max(height1, height2)+1);
 	}
 	
 }	

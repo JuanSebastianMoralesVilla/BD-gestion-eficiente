@@ -10,7 +10,6 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 	private Node<K,E> root;
 	private boolean searching;
 	
-	
 	public Node<K, E> getRoot() {
 		return root;
 	}
@@ -45,36 +44,52 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		setWeight(getWeight() + 1);
 	}
 	
-	protected int insert(Node<K,E> toAdd,Node<K,E> current) {
+	protected void insert(Node<K,E> toAdd,Node<K,E> current) {
+		int heightLeft = 0;
+		int heightRight = 0;
 		if(toAdd.getKey().toString().compareTo(current.getKey().toString()) >= 0) {
+			
 			if(current.getRight()==null) {
 				current.setRight(toAdd);
 				toAdd.setParent(current);
-				if(current.getLeft()==null) {
-					current.setHeight(current.getHeight()+1);
-					return 1;
-				}else {
-					return 0;
+				
+				if(current.getLeft()!= null) {
+					heightLeft = current.getLeft().getHeight();
 				}
+				if(current.getRight()!= null) {
+					heightRight = current.getRight().getHeight();
+				}
+				current.setHeight(Math.max(heightLeft,heightRight)+1);
 			}else {
-				int aux = insert(toAdd,current.getRight());
-				current.setHeight(current.getHeight()+aux);
-				return aux;
+				insert(toAdd,current.getRight());
+				if(current.getLeft()!= null) {
+					heightLeft = current.getLeft().getHeight();
+				}
+				if(current.getRight()!= null) {
+					heightRight = current.getRight().getHeight();
+				}
+				current.setHeight(Math.max(heightLeft,heightRight)+1);
 			}
 		}else {
 			if(current.getLeft()==null) {
 				current.setLeft(toAdd);
 				toAdd.setParent(current);
-				if(current.getRight()==null) {
-					current.setHeight(current.getHeight()+1);
-					return 1;
-				}else {
-					return 0;
+				if(current.getLeft()!= null) {
+					heightLeft = current.getLeft().getHeight();
 				}
+				if(current.getRight()!= null) {
+					heightRight = current.getRight().getHeight();
+				}
+				current.setHeight(Math.max(heightLeft,heightRight)+1);
 			}else {
-				int aux = insert(toAdd,current.getLeft());
-				current.setHeight(current.getHeight()+aux);
-				return aux;
+				insert(toAdd,current.getLeft());
+				if(current.getLeft()!= null) {
+					heightLeft = current.getLeft().getHeight();
+				}
+				if(current.getRight()!= null) {
+					heightRight = current.getRight().getHeight();
+				}
+				current.setHeight(Math.max(heightLeft,heightRight)+1);
 			}
 		}
 	}
@@ -364,28 +379,29 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		}
 	}
 	
-	public ArrayList<E> sensitiveSearch(K key) throws InterruptedException{
+	public int sensitiveSearch(K key,ArrayList<E> array) throws InterruptedException{
 		
-		ArrayList<E> array = new ArrayList<>();
+		array = new ArrayList<>();
 		Node<K,E> current = searchValueSensitive(this.root,key);
+		Integer ammount = 0;
 		if(current!=null) {
 			searching = true;
-			if(current.getHeight()>1) {
+			if(current.getHeight()>10) {
 				
 				array.add(current.getElement());
-				SearchingThread<K,E> searchingThread1 = new SearchingThread<K,E>(this,current.getLeft(), key, array);
-				SearchingThread<K,E> searchingThread2 = new SearchingThread<K,E>(this,current.getRight(), key, array);
+				SearchingThread<K,E> searchingThread1 = new SearchingThread<K,E>(this,current.getLeft(), key, array,ammount);
+				SearchingThread<K,E> searchingThread2 = new SearchingThread<K,E>(this,current.getRight(), key, array,ammount);
 				searchingThread1.start();
 				searchingThread2.start();
 				RunningThread<K,E> rt = new RunningThread<>(this, searchingThread1,searchingThread2);
 				rt.start();
 				
 			}else {
-				searchValuesSensitiveR(array,current,key);
+				searchValuesSensitiveR(ammount,array,current,key);
 				stopSearch();
 			}
 		}
-		return array;
+		return ammount;
 	}
 	private Node<K,E> searchValueSensitive(Node<K,E> root,K key){
 		if(root!=null && searching) {
@@ -400,15 +416,19 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		}
 		return null;
 	}
-	public void searchValuesSensitiveR(ArrayList<E> array,Node<K,E> root,K key){
-		if(root!=null && searching && array.size()<100) {
+	public int searchValuesSensitiveR(Integer ammount,ArrayList<E> array,Node<K,E> root,K key){
+		if(root!=null && searching ) {
 			int aux = root.startsWith(key);
-			if(aux==0) {
-				 array.add(root.getElement());
+			if(aux==0 ) {
+				ammount++;
+				if( ammount<=20) {
+					array.add(root.getElement());
+				}
 			}
-			searchValuesSensitiveR(array,root.getLeft(),key);
-			searchValuesSensitiveR(array,root.getRight(),key);
+			searchValuesSensitiveR(ammount,array,root.getLeft(),key);
+			searchValuesSensitiveR(ammount,array,root.getRight(),key);
 		}
+		return ammount;
 	}
 	public int getWeight() {
 		return weight;
@@ -417,6 +437,7 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 	public void setWeight(int weight) {
 		this.weight = weight;
 	}
+	
 	public void stopSearch() {
 		searching = false;
 	}

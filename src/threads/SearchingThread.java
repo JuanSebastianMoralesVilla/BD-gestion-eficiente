@@ -10,14 +10,18 @@ public class SearchingThread<K extends Comparable<K>,E> extends Thread{
 	private Node<K,E> node;
 	private K key;
 	private ArrayList<E> array;
-	public SearchingThread(BinarySearchTree<K,E> avlTree,Node<K,E> node,K key, ArrayList<E> array) {
+	private Integer ammount;
+	
+	public SearchingThread(BinarySearchTree<K,E> avlTree,Node<K,E> node,K key, ArrayList<E> array,Integer ammount) {
 		this.avlTree = avlTree;
 		this.node = node;
 		this.key = key;
 		this.array = array;
+		this.ammount = ammount;
 	}
 	@Override
 	public void run() {
-		avlTree.searchValuesSensitiveR(array, node, key);
+		
+		avlTree.searchValuesSensitiveR(ammount,array, node, key);
 	}
 }
