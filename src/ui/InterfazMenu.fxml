@@ -123,7 +123,7 @@
                         <DatePicker fx:id="txtDateBHDA" layoutX="151.0" layoutY="240.0" />
                         <TextField fx:id="txtLastNameA" editable="false" layoutX="151.0" layoutY="282.0" />
                         <TextField fx:id="txtNameA" layoutX="142.0" layoutY="328.0" />
-                        <TextField fx:id="btCodigoA" editable="false" layoutX="37.0" layoutY="63.0" prefHeight="25.0" prefWidth="66.0" />
+                        <TextField fx:id="btCodigoA" disable="true" editable="false" layoutX="37.0" layoutY="63.0" prefHeight="25.0" prefWidth="66.0" />
                         <Spinner fx:id="txtHeightA" layoutX="131.0" layoutY="379.0" />
                         <Button fx:id="btConfirmUser" layoutX="135.0" layoutY="438.0" mnemonicParsing="false" onAction="#confirmUdpateUser" text="CONFIRMAR " />
                         <ImageView fitHeight="208.0" fitWidth="213.0" layoutX="332.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true" styleClass="Prueba">

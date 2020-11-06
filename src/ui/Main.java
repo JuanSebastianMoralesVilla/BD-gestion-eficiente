@@ -30,6 +30,7 @@ launch (args);
 	@Override
 	public void start(Stage stage) throws Exception {
 		// TODO Auto-generated method stub
+		
 		dbGUI= new DataBaseGUI(stage, miDataBase);
 		//FileInputStream fis = new FileInputStream("Images/");
 		FXMLLoader f = new FXMLLoader(getClass().getResource("InterfazMenu.fxml"));
@@ -45,7 +46,7 @@ launch (args);
 		//stage.getIcons().add(new Image(fis));
 		stage.setTitle("BD VIP");
 		stage.show();
-		
+		dbGUI.initialize();
 	}
 
 }

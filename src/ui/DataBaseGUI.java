@@ -2,11 +2,15 @@ package ui;
 
 import java.io.File;
 
+import javax.swing.JOptionPane;
+
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -18,7 +22,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+
 import model.DataBase;
+import model.User;
 
 public class DataBaseGUI {
 
@@ -26,14 +32,7 @@ public class DataBaseGUI {
 	// Relaciones
 	// --------------------
 	private DataBase database;
-
-	// --------------------
-	// constructor
-	// --------------------
-	public DataBaseGUI(Stage stage, DataBase dataBase) {
-		// TODO Auto-generated constructor stub
-		this.database = dataBase;
-	}
+	private User user;
 
 	// --------------------
 	// Atributos
@@ -106,13 +105,13 @@ public class DataBaseGUI {
 	private TableView<?> tableUsers;
 
 	@FXML
-	private TableColumn<?, ?> cvID;
+	private TableColumn<User, String> cvID;
 
 	@FXML
-	private TableColumn<?, ?> cvName;
+	private TableColumn<User, String> cvName;
 
 	@FXML
-	private TableColumn<?, ?> cvLastName;
+	private TableColumn<User, String> cvLastName;
 
 	@FXML
 	private Button btActualizeData;
@@ -147,12 +146,34 @@ public class DataBaseGUI {
 	@FXML
 	private Button btDeleteUser;
 
+	@FXML
+	private ComboBox<String> comboBoxSearch;
+
+	// --------------------
+	// constructor
+	// --------------------
+	public DataBaseGUI(Stage stage, DataBase dataBase) {
+		// TODO Auto-generated constructor stub
+		this.database = dataBase;
+
+	}
+
+	@FXML
+	public void initialize() {
+		comboBoxSearch.getItems().removeAll(comboBoxSearch.getItems());
+		comboBoxSearch.getItems().addAll("Nombre", "Apellido", "Codigo","Nombre Completo");
+		comboBoxSearch.getSelectionModel().select("Nombre");
+		
+	}
+
 	// --------------------
 	// Metodos de clase GUI
 	// ---------------------
 
 	@FXML
 	void addUser(ActionEvent event) {
+		String name;
+		String lastName;
 
 	}
 
@@ -168,10 +189,18 @@ public class DataBaseGUI {
 
 	@FXML
 	void generateData(ActionEvent event) {
+		try {
+			numData = Integer.parseInt(txtCantGenerate.getText());
+			if (numData < 0) {
+				JOptionPane.showMessageDialog(null, "El numero ingresado debe ser mayor a cero");
+			} else {
 
-		numData = Integer.parseInt(txtCantGenerate.getText());
-		System.out.println(numData);
+			}
+			System.out.println(numData);
 
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "Debes ingresar un numero valido");
+		}
 	}
 
 	@FXML
