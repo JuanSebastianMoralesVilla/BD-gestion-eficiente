@@ -48,6 +48,7 @@
                         <Label layoutX="35.0" layoutY="325.0" text="Time:" />
                         <TextField fx:id="txtTimeGen" layoutX="35.0" layoutY="355.0" />
                         <Separator layoutX="212.0" layoutY="6.0" orientation="VERTICAL" prefHeight="424.0" prefWidth="23.0" />
+                        <Label fx:id="ProgressLabel" layoutX="67.0" layoutY="470.0" prefHeight="17.0" prefWidth="533.0" text="Label" />
                      </children>
                   </AnchorPane>
             </content>

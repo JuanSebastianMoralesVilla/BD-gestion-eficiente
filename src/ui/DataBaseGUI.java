@@ -1,9 +1,14 @@
 package ui;
 
+import java.io.File;
+
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
@@ -31,11 +36,20 @@ public class DataBaseGUI {
 	}
 
 	// --------------------
+	// Atributos
+	// ---------------------
+
+	int numData;
+
+	// --------------------
 	// elementos de la gui
 	// ---------------------
 
 	@FXML
 	private ProgressBar lineProgress;
+
+	@FXML
+	private Label ProgressLabel;
 
 	@FXML
 	private Button btSaveData;
@@ -155,6 +169,9 @@ public class DataBaseGUI {
 	@FXML
 	void generateData(ActionEvent event) {
 
+		numData = Integer.parseInt(txtCantGenerate.getText());
+		System.out.println(numData);
+
 	}
 
 	@FXML
@@ -170,6 +187,19 @@ public class DataBaseGUI {
 	@FXML
 	void updateUser(ActionEvent event) {
 
+	}
+
+	void setProgressBar(int progress) {
+
+		Platform.runLater(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				txtCantGenerate.setText(String.valueOf(progress));
+				lineProgress.setProgress((double) progress / numData);
+			}
+		});
 	}
 
 }
