@@ -1,6 +1,12 @@
 package model;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Random;
 
 import custom_exceptions.InvalidValueException;
@@ -15,20 +21,61 @@ public class DataBase {
 	private AVLTree<String, User> usersByFullName;
 	
 	private double seachingAvance;
+	private ArrayList<String> names_gender;
+	private ArrayList<String> lastNames;
+	private String[] countries;
+	private String[] ages_proportions;
 	private int[] currentIDs;
-	public final static int AMMOUNT_COUNTRIES =35;
+	public final static int AMMOUNT_COUNTRIES =34;
 	
 	public final static String ID = "id";
 	public final static String NAME = "name";
 	public final static String LAST_NAME = "lastName";
 	public final static String FULL_NAME = "fullName";
-	public DataBase() {
+	public DataBase() throws IOException {
 		usersByID = new AVLTree<>();
 		usersByName = new AVLTree<>();
 		usersByLastName = new AVLTree<>();
 		usersByFullName = new AVLTree<>();
-		currentIDs = new int[110];
+		currentIDs = new int[34];
 		seachingAvance = 0;
+		File names = new File("data/names_gender.csv");
+		File lastNames = new File("data/lastName");
+		File countries = new File("data/population_by_country.csv");
+		File ages = new File("data/ages_proportion.csv");
+		BufferedReader br = new BufferedReader(new FileReader(names));
+		names_gender = new ArrayList<>();
+		String str = br.readLine();
+		while(str != null) {
+			names_gender.add(str);
+			str = br.readLine();
+		}
+		br = new BufferedReader(new FileReader(lastNames));
+		this.lastNames = new ArrayList<>();
+		str = br.readLine();
+		while(str != null) {
+			this.lastNames.add(str);
+			str = br.readLine();
+		}
+		br = new BufferedReader(new FileReader(countries));
+		this.countries = new String[AMMOUNT_COUNTRIES];
+		str = br.readLine();
+		int i =0;
+		while(str != null) {
+			this.countries[i] = str;
+			str = br.readLine();
+			i++;
+		}
+		br = new BufferedReader(new FileReader(countries));
+		this.ages_proportions = new String[5];
+		str = br.readLine();
+		i =0;
+		while(str != null) {
+			this.ages_proportions[i] = str;
+			str = br.readLine();
+			i++;
+		}
+		
 	}
 	/**
 	 * 
@@ -95,7 +142,7 @@ public class DataBase {
 		user.setPicture(picture);
 	}
 	//String name, String lastName,String id, String gender,double stature, String nationality, LocalDate dayOfBHD, String picture
-	public void generateUsers(int ammount) {
+	public void generateUsers(int ammount) throws FileNotFoundException {
 		
 		
 		CreatingUserThread<String, User> userById;
@@ -129,13 +176,31 @@ public class DataBase {
 	}
 	
 	//Order is Name>LastName>Gender
-	private String[] generateFullNames() {
-		Random random = new Random();
+	private String[] generateFullNames() throws FileNotFoundException {
+		Random random = new Random(System.currentTimeMillis());
+		
 		return null;
 	}
 	
 	private LocalDate generateAge() {
-		return null;
+		Random random = new Random(System.currentTimeMillis());
+		double country = random.nextDouble()*100;
+		
+		int ageMin =0;
+		int ageMax = 0;
+		for (int i = 0; i < ages_proportions.length; i++) {
+			ageMax  = Integer.parseInt(ages_proportions[i].split(";")[0]);
+			double probability = Double.parseDouble( countries[i].split(";")[1]);
+			if(country<=probability) {
+				break;
+			}
+			ageMin = ageMax;
+		}
+		int age = random.nextInt(ageMax-ageMin+1)+ageMin;
+		LocalDate date = LocalDate.now();
+		date.minusYears(age);
+		date.minusDays(random.nextInt(363));
+		return date;
 	}
 	
 	private double generateStature() {
@@ -143,7 +208,17 @@ public class DataBase {
 	}
 	
 	private String generateNationality() {
-		return null;
+		Random random = new Random(System.currentTimeMillis());
+		double country = random.nextDouble()*100;
+		String currentCountry = "";
+		for (int i = 0; i < countries.length; i++) {
+			currentCountry  = countries[i].split(";")[0];
+			double probability = Double.parseDouble( countries[i].split(";")[1]);
+			if(country<=probability) {
+				break;
+			}
+		}
+		return currentCountry;
 	}
 	
 	private String generateID(String nationality) {
@@ -154,9 +229,6 @@ public class DataBase {
 		return null;
 	}
 	
-	private String generateGender() {
-		return null;
-	}
 	
 	public void saveData() {
 		
