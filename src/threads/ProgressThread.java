@@ -13,6 +13,6 @@ public class ProgressThread extends Thread{
 	}
 	@Override
 	public void run() {
-		
+		dataBaseGUI.setProgressBar();
 	}
 }

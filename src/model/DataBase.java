@@ -40,11 +40,16 @@ public class DataBase {
 	private int currentIDs;
 	public final static int AMMOUNT_COUNTRIES =34;
 	
+	private boolean process1;
+	private boolean process2;
+	private boolean process3;
+	private boolean process4;
+	
 	private boolean creating;
 	private double currentAmmount;
 	private double totalAmmount;
 	private double loadingAdvance;
-	User[] users;
+	ArrayList<User> users;
 	
 	public final static String ID = "id";
 	public final static String NAME = "name";
@@ -52,6 +57,7 @@ public class DataBase {
 	public final static String FULL_NAME = "fullName";
 	public final static String FILE = ".data";
 	public DataBase() throws IOException {
+		users = new ArrayList<User>();
 		usersByID = new AVLTree<>();
 		usersByName = new AVLTree<>();
 		usersByLastName = new AVLTree<>();
@@ -234,9 +240,11 @@ public class DataBase {
 	//String name, String lastName,String id, String gender,double stature, String nationality, LocalDate dayOfBHD, String picture
 	public void generateUsers(int ammount) throws FileNotFoundException {
 		totalAmmount = ammount*4;
-		users = new User[ammount];
+		users = new ArrayList<User>();
+		process1 = true;
 		creating = true;
 		for (int i = 0; i < ammount; i++) {
+			
 			String[] fullName = generateFullNames();
 			String name = fullName[0];
 			String lastName = fullName[1];
@@ -247,9 +255,12 @@ public class DataBase {
 			LocalDate dayOfBHD = generateAge();
 			Image picture = null;
 			User user = new User(name,lastName,id,gender,stature,nationality,dayOfBHD,picture);
-			users[i] = user;
-			loadingAdvance = Double.parseDouble(i+"")/Double.parseDouble(ammount+"");
+			users.add(user);
+			double n = i;
+			double d = ammount;
+			loadingAdvance =n/d;
 		}
+		process1 = false;
 		creating = false;
 	}
 	
@@ -319,7 +330,7 @@ public class DataBase {
 		return null;
 	}
 	
-	private void saveInAVL() {
+	public void saveInAVL() {
 		creating = true;
 		CreatingUserThread threadByID = new CreatingUserThread(this,usersByID, users, ID);
 		CreatingUserThread threadByNAME = new CreatingUserThread(this,usersByName, users, NAME);
@@ -334,7 +345,7 @@ public class DataBase {
 	}
 	
 	public void saveData() throws IOException {
-		 saveInAVL();
+		
 		 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("data/"+ID+FILE) );
 		 oos.writeObject(usersByID);
 		 oos.close();
@@ -372,10 +383,14 @@ public class DataBase {
 	
 	public void advance() {
 		currentAmmount++;
+		loadingAdvance = currentAmmount/totalAmmount;
+		if(loadingAdvance==1) {
+			creating = false;
+		}
+		
 	}
 	public double getSeachingAvance() {
-		loadingAdvance = currentAmmount/totalAmmount;
-		if(loadingAdvance==totalAmmount) {
+		if(!process1 && !process2 && !process3 && !process4) {
 			creating = false;
 		}
 		return loadingAdvance;
@@ -385,6 +400,30 @@ public class DataBase {
 	}
 	public void setCreating(boolean creating) {
 		this.creating = creating;
+	}
+	public boolean isProcess1() {
+		return process1;
+	}
+	public void setProcess1(boolean process1) {
+		this.process1 = process1;
+	}
+	public boolean isProcess2() {
+		return process2;
+	}
+	public void setProcess2(boolean process2) {
+		this.process2 = process2;
+	}
+	public boolean isProcess3() {
+		return process3;
+	}
+	public void setProcess3(boolean process3) {
+		this.process3 = process3;
+	}
+	public boolean isProcess4() {
+		return process4;
+	}
+	public void setProcess4(boolean process4) {
+		this.process4 = process4;
 	}
 	
 }

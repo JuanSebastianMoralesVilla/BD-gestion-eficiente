@@ -31,39 +31,19 @@ public class DataBaseTest {
 	
 	}
 
-	public void setup2() throws ValuesIsEmptyException, InvalidValueException, IOException {
+	public void setup2() throws Exception {
 		
 		dataBase = new DataBase();
 		ArrayList<User> users = new ArrayList<User>();
-		try {
-			dataBase.createUser("Sebastian", "Morales", "Male", 1.65, "Colombia", LocalDate.now());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		dataBase.createUser("Sebastian", "Morales", "Male", 1.65, "Colombia", LocalDate.now());
 		
 	}
 	
-	public void setup3() throws ValuesIsEmptyException, InvalidValueException, IOException {
+	public void setup3() throws Exception {
 		dataBase = new DataBase();
-		try {
-			dataBase.createUser("Sebastian", "Morales", "Male", 1.65, "Colombia", LocalDate.now());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			dataBase.createUser("Cristian", "Morales",  "Male", 1.75, "Colombia", LocalDate.now());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			dataBase.createUser("Andres", "Aristi", "Male", 1.78, "Colombia", LocalDate.now());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		dataBase.createUser("Sebastian", "Morales", "Male", 1.65, "Colombia", LocalDate.now());
+		dataBase.createUser("Cristian", "Morales",  "Male", 1.75, "Colombia", LocalDate.now());
+		dataBase.createUser("Andres", "Aristi", "Male", 1.78, "Colombia", LocalDate.now());
 	}
 
 	

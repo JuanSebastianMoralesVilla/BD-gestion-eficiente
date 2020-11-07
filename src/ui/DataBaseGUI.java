@@ -38,6 +38,8 @@ import javafx.stage.Stage;
 
 import model.DataBase;
 import model.User;
+import threads.CreatingDataThread;
+import threads.ProgressThread;
 
 public class DataBaseGUI {
 
@@ -267,7 +269,6 @@ public class DataBaseGUI {
 		if (name.equals("")|| lastName.equals("") || height.equals("") || dayOfBHD.equals("")) {
 			JOptionPane.showMessageDialog(null, "por favor complete todos los campos");
 		}
-		System.out.println(height);
 		double stature = Double.parseDouble(height);
 		
 		User user= database.createUser(name, lastName, gender, stature, nationality, dayOfBHD);
@@ -346,19 +347,11 @@ public class DataBaseGUI {
 			if (numData < 0) {
 				JOptionPane.showMessageDialog(null, "El numero ingresado debe ser mayor a cero");
 			} else {
-				btSaveData.setDisable(false);
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							database.generateUsers(numData);
-						} catch (FileNotFoundException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				});
-			    setProgressBar();
+				ProgressThread pt = new ProgressThread(database, this);
+				database.setCreating(true);
+				pt.start();
+				CreatingDataThread cd = new CreatingDataThread(database, numData);
+				cd.start();
 			}
 
 		} catch (Exception e) {
@@ -368,12 +361,11 @@ public class DataBaseGUI {
 
 	@FXML
 	void saveData(ActionEvent event) {
-		try {
-			database.saveData();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		database.saveInAVL();
+		database.setCreating(true);
+		ProgressThread pt = new ProgressThread(database, this);
+		pt.start();
+		
 	}
 	
 	@FXML
@@ -442,33 +434,33 @@ public class DataBaseGUI {
 		cvLastName.setCellValueFactory(new PropertyValueFactory<User, String>("lastName"));
     }
 
-	void setProgressBar() {
-
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				wGenerateData.setDisable(true);
-				wAddUser.setDisable(true);
-				wSearch.setDisable(true);
-				wUpdate.setDisable(true);
-				double start = System.currentTimeMillis();
-				while(database.isCreating()) {
-					lineProgress.setProgress(database.getSeachingAvance());
-					try {
-						Thread.sleep(10);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-				double end = System.currentTimeMillis();
-				txtTimeGen.setText((end-start)+"");
-				wGenerateData.setDisable(false);
-				wAddUser.setDisable(false);
-				wSearch.setDisable(false);
-				wUpdate.setDisable(false);
-				
+	public void setProgressBar() {
+		double start = System.currentTimeMillis();
+		btGenerateData.setDisable(true);
+		wGenerateData.setDisable(true);
+		wAddUser.setDisable(true);
+		wSearch.setDisable(true);
+		wUpdate.setDisable(true);
+		btSaveData.setDisable(true);
+		
+		while(database.isCreating()) {
+			lineProgress.setProgress(database.getSeachingAvance());
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
-		});
+		}
+		
+		
+		wGenerateData.setDisable(false);
+		wAddUser.setDisable(false);
+		wSearch.setDisable(false);
+		wUpdate.setDisable(false);
+		btSaveData.setDisable(false);
+		btGenerateData.setDisable(false);
+		double end = System.currentTimeMillis();
+		txtTimeGen.setText((end-start)+"");
 	}
 	
     @FXML
