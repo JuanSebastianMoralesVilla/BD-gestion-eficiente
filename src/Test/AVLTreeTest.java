@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import data_structures.AVLTree;
 import data_structures.Node;
+import model.DataBase;
 
 class AVLTreeTest {
 
@@ -56,9 +57,9 @@ class AVLTreeTest {
 
 	public void setup6() {
 		myTree = new AVLTree<Integer, String>();
-
-		myTree.insert(1, "01");
 		myTree.insert(2, "02");
+		myTree.insert(1, "01");
+
 		myTree.insert(3, "03");
 		myTree.insert(4, "04");
 		myTree.insert(5, "05");
@@ -115,12 +116,15 @@ class AVLTreeTest {
 
 	@Test
 	void insertTest4() {
-		// insertar desbalanceo por la ziquierda cuando el subarbol el fb del  subarbol es -1, 1 , 0.
+
+		// insertar desbalanceo por la ziquierda cuando el subarbol el fb del subarbol
+		// es -1, 1 , 0.
 	}
 
 	@Test
 	void insertTest5() {
-		// insertar desbalanceo por la derecha cuando el subarbol el fb del  subarbol es -1, 1 , 0.
+		// insertar desbalanceo por la derecha cuando el subarbol el fb del subarbol es
+		// -1, 1 , 0.
 
 	}
 
@@ -133,15 +137,16 @@ class AVLTreeTest {
 
 		setup6();
 
-		String nodeSearch= myTree.searchValue(1);
+		String nodeSearch = myTree.searchValue(1);
 		assertTrue("El nodo no se encontro en el arbol", (nodeSearch.equals("01")));
-		
+
 		/*
-		nodo1 = myTree.searchValue(3);
-		assertTrue("El nodo no se encontro en el arbol", (nodo1.getKey() == 3 && nodo1.getElement().equals("03")));
-		nodo1 = myTree.searchValue(5);
-		assertTrue("El nodo no se encontro en el arbol", (nodo1.getKey() == 5 && nodo1.getElement().equals("05")));
-		*/
+		 * nodo1 = myTree.searchValue(3);
+		 * assertTrue("El nodo no se encontro en el arbol", (nodo1.getKey() == 3 &&
+		 * nodo1.getElement().equals("03"))); nodo1 = myTree.searchValue(5);
+		 * assertTrue("El nodo no se encontro en el arbol", (nodo1.getKey() == 5 &&
+		 * nodo1.getElement().equals("05")));
+		 */
 	}
 
 	@Test
@@ -196,6 +201,5 @@ class AVLTreeTest {
 		assertNull(myTree.searchValue(4));
 
 	}
-	
 
 }
