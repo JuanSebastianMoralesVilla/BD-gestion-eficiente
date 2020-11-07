@@ -31,35 +31,24 @@ public class DataBaseTest {
 	
 	}
 
-	public void setup2() {
-
+	public void setup2() throws ValuesIsEmptyException, InvalidValueException {
+		
+		dataBase = new DataBase();
+		ArrayList<User> users = new ArrayList<User>();
+		dataBase.createUser("Sebastian", "Morales", "Male", 1.65, "Colombia", LocalDate.now(), "https: miimage.com");
+		
+	}
+	
+	public void setup3() throws ValuesIsEmptyException, InvalidValueException {
+		dataBase = new DataBase();
+		dataBase.createUser("Sebastian", "Morales", "Male", 1.65, "Colombia", LocalDate.now(), "https: miimage.com");
+		dataBase.createUser("Cristian", "Morales",  "Male", 1.75, "Colombia", LocalDate.now(),
+				"https: miimage.com");
+		dataBase.createUser("Andres", "Aristi", "Male", 1.78, "Colombia", LocalDate.now(),
+				"https: miimage.com");
 	}
 
-	@Test
-	public void addUserTest1() throws ValuesIsEmptyException, InvalidValueException {
-
-		// assertTrue("El usuario no se agrego
-		// correctamente",user.getName().equals("Sebastian") &&
-		// user.getLastName().equals("Morales") && user.getGender() .equals("Male")&&
-		// user.getStature()==1.65 && user.getNationality().equals("Colombia") &&
-		// user.getPicture().equals("https: miimage.com"));
-	}
-/*
-	@Test
-	public void addUser() throws ValuesIsEmptyException, InvalidValueException {
-		// TODO Auto-generated method stub
-		LocalDate ld = LocalDate.now();
-		LocalDate ld2 = LocalDate.now();
-		// dataBase.createUser("Sebastian","Morales","Male",
-		// 1.65,"Colombia",LocalDate.now(), "https: miimage.com");
-
-		assertTrue("El usuario no fue insertado correctamente",
-				user.getName().equals("Sebastian") && user.getLastName().equals("Morales")
-						&& user.getGender().equals("Male") && (user.getStature() == 1.65)
-						&& user.getNationality().equals("Colombia") && user.getDayOfBHD().now().equals(ld2)
-						&& user.getPicture().equalsIgnoreCase("https: miimage.com"));
-	}
-*/
+	
 	@Test
 	public void searchTest() {
 		setup1();
@@ -87,6 +76,35 @@ public class DataBaseTest {
 
 		assertEquals(null, dataBase.searchUser("0003"), "el usuario no exite");
 	}
+	
+	
+	
+	
+	
+	@Test
+	public void addUserTest1() throws ValuesIsEmptyException, InvalidValueException {
+		//setup2();
+		//setup3();	
+		//User user=dataBase.searchUser("0001");
+// assertTrue("El usuario no se agrego correctamente" );
+	}
+/*
+	@Test
+	public void addUser() throws ValuesIsEmptyException, InvalidValueException {
+		// TODO Auto-generated method stub
+		LocalDate ld = LocalDate.now();
+		LocalDate ld2 = LocalDate.now();
+		// dataBase.createUser("Sebastian","Morales","Male",
+		// 1.65,"Colombia",LocalDate.now(), "https: miimage.com");
+
+		assertTrue("El usuario no fue insertado correctamente",
+				user.getName().equals("Sebastian") && user.getLastName().equals("Morales")
+						&& user.getGender().equals("Male") && (user.getStature() == 1.65)
+						&& user.getNationality().equals("Colombia") && user.getDayOfBHD().now().equals(ld2)
+						&& user.getPicture().equalsIgnoreCase("https: miimage.com"));
+	}
+*/
+	
 
 	@Test
 	public void DeleteTest1() {
