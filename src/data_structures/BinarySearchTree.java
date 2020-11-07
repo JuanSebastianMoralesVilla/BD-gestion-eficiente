@@ -9,6 +9,7 @@ import threads.SearchingThread;
 public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearchTree<K, E> {
 	private Node<K,E> root;
 	private boolean searching;
+	private int amountSeach;
 	
 	public Node<K, E> getRoot() {
 		return root;
@@ -31,6 +32,7 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 	public BinarySearchTree() {
 		root = null;
 		searching = true;
+		amountSeach = 0;
 	}
 	
 	@Override
@@ -379,29 +381,29 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		}
 	}
 	
-	public int sensitiveSearch(K key,ArrayList<E> array) throws InterruptedException{
-		
-		array = new ArrayList<>();
+	public ArrayList<E> sensitiveSearch(K key) {
+		amountSeach = 0;
+		ArrayList<E> array = new ArrayList<>();
 		Node<K,E> current = searchValueSensitive(this.root,key);
-		Integer ammount = 0;
+		
 		if(current!=null) {
 			searching = true;
 			if(current.getHeight()>10) {
 				
 				array.add(current.getElement());
-				SearchingThread<K,E> searchingThread1 = new SearchingThread<K,E>(this,current.getLeft(), key, array,ammount);
-				SearchingThread<K,E> searchingThread2 = new SearchingThread<K,E>(this,current.getRight(), key, array,ammount);
+				SearchingThread<K,E> searchingThread1 = new SearchingThread<K,E>(this,current.getLeft(), key, array);
+				SearchingThread<K,E> searchingThread2 = new SearchingThread<K,E>(this,current.getRight(), key, array);
 				searchingThread1.start();
 				searchingThread2.start();
 				RunningThread<K,E> rt = new RunningThread<>(this, searchingThread1,searchingThread2);
 				rt.start();
 				
 			}else {
-				searchValuesSensitiveR(ammount,array,current,key);
+				searchValuesSensitiveR(array,current,key);
 				stopSearch();
 			}
 		}
-		return ammount;
+		return array;
 	}
 	private Node<K,E> searchValueSensitive(Node<K,E> root,K key){
 		if(root!=null && searching) {
@@ -416,19 +418,21 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		}
 		return null;
 	}
-	public int searchValuesSensitiveR(Integer ammount,ArrayList<E> array,Node<K,E> root,K key){
+	public ArrayList<E> searchValuesSensitiveR(ArrayList<E> array,Node<K,E> root,K key){
 		if(root!=null && searching ) {
 			int aux = root.startsWith(key);
 			if(aux==0 ) {
-				ammount++;
-				if( ammount<=20) {
+				amountSeach++;
+				if( amountSeach<=20) {
 					array.add(root.getElement());
+				}else {
+					array.clear();
 				}
 			}
-			searchValuesSensitiveR(ammount,array,root.getLeft(),key);
-			searchValuesSensitiveR(ammount,array,root.getRight(),key);
+			searchValuesSensitiveR(array,root.getLeft(),key);
+			searchValuesSensitiveR(array,root.getRight(),key);
 		}
-		return ammount;
+		return array;
 	}
 	public int getWeight() {
 		return weight;
