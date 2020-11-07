@@ -381,7 +381,7 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		}
 	}
 	
-	public ArrayList<E> sensitiveSearch(K key) throws InterruptedException{
+	public ArrayList<E> sensitiveSearch(K key) {
 		amountSeach = 0;
 		ArrayList<E> array = new ArrayList<>();
 		Node<K,E> current = searchValueSensitive(this.root,key);

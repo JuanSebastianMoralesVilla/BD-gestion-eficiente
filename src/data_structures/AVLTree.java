@@ -1,6 +1,9 @@
 package data_structures;
 
-public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> implements Serializable{
 	
 	public AVLTree() {
 		super();
@@ -219,8 +222,18 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 	
 	public void balance(Node<K,E> node) {
 		if(node!=null) {
+			int height1 = 0;
+			int height2 = 0;
 			
+			if(node.getLeft()!=null) {
+				height1 = node.getLeft().getHeight();
+			}
+			if(node.getRight()!= null ){
+				height2 = node.getRight().getHeight();
+			}
+			node.setHeight(Math.max(height1, height2)+1);
 			int balanceFactor = balanceFactor(node);
+			
 			Node<K,E> parent = node.getParent();
 			if(balanceFactor>1) {
 				rightCases(node.getRight());
@@ -229,6 +242,7 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 				leftCases(node.getLeft());
 				
 			}
+			
 			balance(parent);
 		}
 	}
@@ -258,24 +272,25 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 	public void rightRotate(Node <K,E> node) {	
 		Node<K,E> parent =node.getParent();
 		Node <K,E> left = node.getLeft();
-		if(left.getRight()!=null){
+		
+		if(left.getRight()!=null) {
 			Node <K,E> leftRightTree = left.getRight();
 			node.setLeft(leftRightTree);
 			leftRightTree.setParent(node);
 		}else {
 			node.setLeft(null);
 		}
+
 		left.setRight(node);
 		node.setParent(left);
 		left.setParent(parent);
-		
-		if(parent!=null && node==parent .getLeft()) {
+
+		if(parent!=null && node==parent.getLeft()) {
 			parent.setLeft(left);
 		}else if(parent!=null && node==parent.getRight()) {
 			parent.setRight(left);
 		}else {
 			setRoot(left);
-			left.setParent(null);
 		}
 		int height1 = 0;
 		int height2 = 0;
@@ -298,23 +313,25 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> {
 	public void leftRotate(Node <K,E> node) {
 		Node<K,E> parent =node.getParent();
 		Node <K,E> right = node.getRight();
-		if(right.getLeft()!=null){
+
+		if(right.getLeft()!=null) {
 			Node <K,E> rightLeftTree = right.getLeft();
 			node.setRight(rightLeftTree);
 			rightLeftTree.setParent(node);
 		}else {
 			node.setRight(null);
 		}
+
 		right.setLeft(node);
 		node.setParent(right);
 		right.setParent(parent);
-		if(parent!=null && node==parent .getLeft()) {
+
+		if(parent!=null && node==parent.getLeft()) {
 			parent.setLeft(right);
 		}else if(parent!=null && node==parent.getRight()) {
 			parent.setRight(right);
 		}else {
 			setRoot(right);
-			right.setParent(null);
 		}
 		int height1 = 0;
 		int height2 = 0;

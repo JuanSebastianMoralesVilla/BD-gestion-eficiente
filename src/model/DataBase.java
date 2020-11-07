@@ -1,10 +1,15 @@
 package model;
 
 import java.io.BufferedReader;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Random;
@@ -12,7 +17,6 @@ import java.util.Random;
 import custom_exceptions.InvalidValueException;
 import custom_exceptions.ValuesIsEmptyException;
 import data_structures.AVLTree;
-import threads.CreatingUserThread;
 
 public class DataBase {
 	private AVLTree<String, User> usersByID;
@@ -20,29 +24,33 @@ public class DataBase {
 	private AVLTree<String, User> usersByLastName;
 	private AVLTree<String, User> usersByFullName;
 	
-	private double seachingAvance;
+	private double loadseachingAvance;
 	private ArrayList<String> names_gender;
 	private ArrayList<String> lastNames;
 	private String[] countries;
 	private String[] ages_proportions;
-	private int[] currentIDs;
+	private int currentIDs;
 	public final static int AMMOUNT_COUNTRIES =34;
+	
+	User[] users;
 	
 	public final static String ID = "id";
 	public final static String NAME = "name";
 	public final static String LAST_NAME = "lastName";
 	public final static String FULL_NAME = "fullName";
+	public final static String FILE = ".data";
 	public DataBase() throws IOException {
 		usersByID = new AVLTree<>();
 		usersByName = new AVLTree<>();
 		usersByLastName = new AVLTree<>();
 		usersByFullName = new AVLTree<>();
-		currentIDs = new int[34];
-		seachingAvance = 0;
+		currentIDs = 00000;
+		loadseachingAvance = 0;
 		File names = new File("data/names_gender.csv");
-		File lastNames = new File("data/lastName");
+		File lastNames = new File("data/lastNames.csv");
 		File countries = new File("data/population_by_country.csv");
-		File ages = new File("data/ages_proportion.csv");
+		File ages = new File("data/ages_proporcion.csv");
+		
 		BufferedReader br = new BufferedReader(new FileReader(names));
 		names_gender = new ArrayList<>();
 		String str = br.readLine();
@@ -50,6 +58,7 @@ public class DataBase {
 			names_gender.add(str);
 			str = br.readLine();
 		}
+		br.close();
 		br = new BufferedReader(new FileReader(lastNames));
 		this.lastNames = new ArrayList<>();
 		str = br.readLine();
@@ -57,6 +66,7 @@ public class DataBase {
 			this.lastNames.add(str);
 			str = br.readLine();
 		}
+		br.close();
 		br = new BufferedReader(new FileReader(countries));
 		this.countries = new String[AMMOUNT_COUNTRIES];
 		str = br.readLine();
@@ -66,7 +76,8 @@ public class DataBase {
 			str = br.readLine();
 			i++;
 		}
-		br = new BufferedReader(new FileReader(countries));
+		br.close();
+		br = new BufferedReader(new FileReader(ages));
 		this.ages_proportions = new String[5];
 		str = br.readLine();
 		i =0;
@@ -75,7 +86,14 @@ public class DataBase {
 			str = br.readLine();
 			i++;
 		}
+		br.close();
 		
+	}
+	public AVLTree<String, User> getUsersByID() {
+		return usersByID;
+	}
+	public void setUsersByID(AVLTree<String, User> usersByID) {
+		this.usersByID = usersByID;
 	}
 	/**
 	 * 
@@ -114,12 +132,42 @@ public class DataBase {
 	 * @return
 	 */
 	public User searchUser(String key) {
+		
 		return usersByID.searchValue(key);
 		
 	}
+	public ArrayList<User> sensitiveSearch(String key, String parameter) {
+		switch(parameter) {
+		case ID:
+			usersByID.stopSearch();
+			return usersByID.sensitiveSearch(key);
+			
+		case NAME:
+			usersByName.stopSearch();
+			return usersByName.sensitiveSearch(key);
+			
+		case LAST_NAME:
+			usersByLastName.stopSearch();
+			return usersByLastName.sensitiveSearch(key);
+			
+		case FULL_NAME:
+			usersByLastName.stopSearch();
+			return usersByLastName.sensitiveSearch(key);
+			
+		}
+		return null;
+	}
 	//Si la tableView retorna el objeto guardado se deja user, de lo contrario se cambia a "String key" con el codigo del usuario
 	public boolean delateUser(User user) {
-		return false;
+		String id = user.getId();
+		String name = user.getName();
+		String lastName = user.getLastName();
+		String fullName = name + " " + lastName;
+		boolean result = usersByID.deleteValue(id);
+		usersByName.deleteValue(name);
+		usersByLastName.deleteValue(lastName);
+		usersByFullName.deleteValue(fullName);
+		return result;
 	}
 	
 	//En la GUI al editar llenar las barras con las obciones actuales
@@ -144,11 +192,7 @@ public class DataBase {
 	//String name, String lastName,String id, String gender,double stature, String nationality, LocalDate dayOfBHD, String picture
 	public void generateUsers(int ammount) throws FileNotFoundException {
 		
-		
-		CreatingUserThread<String, User> userById;
-		CreatingUserThread<String, User> userByName;
-		CreatingUserThread<String, User> userByLastName;
-		CreatingUserThread<String, User> userByFullName;
+		users = new User[ammount];
 		for (int i = 0; i < ammount; i++) {
 			String[] fullName = generateFullNames();
 			String name = fullName[0];
@@ -160,55 +204,56 @@ public class DataBase {
 			LocalDate dayOfBHD = generateAge();
 			String picture = generateImage();
 			User user = new User(name,lastName,id,gender,stature,nationality,dayOfBHD,picture);
-			userById = new CreatingUserThread<String, User>(this.usersByID, id, user);
-			userByName = new CreatingUserThread<String, User>(this.usersByName, id, user);
-			userByLastName = new CreatingUserThread<String, User>(this.usersByLastName, id, user);
-			userByFullName = new CreatingUserThread<String, User>(this.usersByFullName, id, user);
-			userById.start();
-			userByName.start();
-			userByLastName.start();
-			userByFullName.start();
-			while(userById.isAlive() || userByName.isAlive() ||  userByLastName.isAlive() ||  userByFullName.isAlive()) {
-				System.out.println("Waiting...");
-			}
-			seachingAvance = Double.parseDouble(i+"")/Double.parseDouble(ammount+"");
+			users[i] = user;
+			loadseachingAvance = Double.parseDouble(i+"")/Double.parseDouble(ammount+"");
+			//System.out.println(i);
 		}
 	}
 	
 	//Order is Name>LastName>Gender
 	private String[] generateFullNames() throws FileNotFoundException {
-		Random random = new Random(System.currentTimeMillis());
-		
-		return null;
+		Random random = new Random();
+		String[] fullName = new String[3];
+		int aux = random.nextInt(names_gender.size()-1);
+		String[] names = names_gender.get(aux).split(",");
+		fullName[0] = names[0];
+		fullName[2] = names[1];
+		aux = random.nextInt(lastNames.size()-1);
+		fullName[1] = lastNames.get(aux);
+		return fullName;
 	}
 	
 	private LocalDate generateAge() {
-		Random random = new Random(System.currentTimeMillis());
-		double country = random.nextDouble()*100;
+		Random random = new Random();
+		double firstProba = random.nextDouble()*100;
 		
 		int ageMin =0;
 		int ageMax = 0;
 		for (int i = 0; i < ages_proportions.length; i++) {
 			ageMax  = Integer.parseInt(ages_proportions[i].split(";")[0]);
-			double probability = Double.parseDouble( countries[i].split(";")[1]);
-			if(country<=probability) {
+			double probability = Double.parseDouble( ages_proportions[i].split(";")[1]);
+			if(firstProba<=probability) {
 				break;
 			}
 			ageMin = ageMax;
 		}
 		int age = random.nextInt(ageMax-ageMin+1)+ageMin;
+		
 		LocalDate date = LocalDate.now();
-		date.minusYears(age);
-		date.minusDays(random.nextInt(363));
+		date = date.minusYears(age);
+		date = date.minusDays(random.nextInt(363));
 		return date;
 	}
 	
 	private double generateStature() {
-		return 0;
+		Random random = new Random();
+		double stature = random.nextDouble()*200+50;
+		
+		return stature;
 	}
 	
 	private String generateNationality() {
-		Random random = new Random(System.currentTimeMillis());
+		Random random = new Random();
 		double country = random.nextDouble()*100;
 		String currentCountry = "";
 		for (int i = 0; i < countries.length; i++) {
@@ -222,7 +267,9 @@ public class DataBase {
 	}
 	
 	private String generateID(String nationality) {
-		return null;
+		String code = Math.abs(nationality.hashCode())+""+currentIDs;
+		currentIDs++;
+		return code;
 	}
 	
 	private String generateImage() {
@@ -230,11 +277,50 @@ public class DataBase {
 	}
 	
 	
-	public void saveData() {
+	public void saveData() throws IOException {
+		 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ID+FILE) );
+		 oos.writeObject(usersByID);
+		 oos.close();
+		 oos = new ObjectOutputStream(new FileOutputStream(NAME+FILE) );
+		 oos.writeObject(usersByName);
+		 oos.close();
+		 oos = new ObjectOutputStream(new FileOutputStream(LAST_NAME+FILE) );
+		 oos.writeObject(usersByLastName);
+		 oos.close();
+		 oos = new ObjectOutputStream(new FileOutputStream(FULL_NAME+FILE) );
+		 oos.writeObject(usersByFullName);
+		 oos.close();
+
+	}
+	@SuppressWarnings("unchecked")
+	public void loadData() throws IOException {
+		 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ID+FILE) );
+		 try {
+			 usersByID  = (AVLTree<String,User>)ois.readObject();
+			 ois.close();
+			 ois = new ObjectInputStream(new FileInputStream(NAME+FILE));
+			 usersByName =  (AVLTree<String,User>)ois.readObject();
+			 ois.close();
+			 ois = new ObjectInputStream(new FileInputStream(LAST_NAME+FILE));
+			 usersByLastName =  (AVLTree<String,User>)ois.readObject();
+			 ois.close();
+			 ois = new ObjectInputStream(new FileInputStream(FULL_NAME+FILE));
+			 usersByFullName =  (AVLTree<String,User>)ois.readObject();
+		} catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 ois.close();
+		
+	}
+	public void printText() {
+		for (int i = 0; i < users.length; i++) {
+			System.out.println(users[i].toString());
+		}
 		
 	}
 	public double getSeachingAvance() {
-		return seachingAvance;
+		return loadseachingAvance;
 	}
 	
 }

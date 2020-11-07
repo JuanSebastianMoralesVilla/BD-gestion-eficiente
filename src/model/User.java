@@ -4,6 +4,12 @@ import java.time.LocalDate;
 
 public class User {
 	
+	@Override
+	public String toString() {
+		return "User [name=" + name + ", lastName=" + lastName + ", gender=" + gender + ", id=" + id + ", stature="
+				+ stature + ", nationality=" + nationality + ", dayOfBHD=" + dayOfBHD + "]";
+	}
+
 	private String name;
 	private String lastName;
 	private String gender;
