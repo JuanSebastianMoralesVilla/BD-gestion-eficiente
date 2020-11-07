@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 
 import java.io.File;
@@ -10,13 +11,21 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+
 import custom_exceptions.InvalidValueException;
 import custom_exceptions.ValuesIsEmptyException;
 import data_structures.AVLTree;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
+import threads.CreatingUserThread;
 
 public class DataBase {
 	private AVLTree<String, User> usersByID;
@@ -24,7 +33,6 @@ public class DataBase {
 	private AVLTree<String, User> usersByLastName;
 	private AVLTree<String, User> usersByFullName;
 	
-	private double loadseachingAvance;
 	private ArrayList<String> names_gender;
 	private ArrayList<String> lastNames;
 	private String[] countries;
@@ -32,6 +40,10 @@ public class DataBase {
 	private int currentIDs;
 	public final static int AMMOUNT_COUNTRIES =34;
 	
+	private boolean creating;
+	private double currentAmmount;
+	private double totalAmmount;
+	private double loadingAdvance;
 	User[] users;
 	
 	public final static String ID = "id";
@@ -45,7 +57,7 @@ public class DataBase {
 		usersByLastName = new AVLTree<>();
 		usersByFullName = new AVLTree<>();
 		currentIDs = 00000;
-		loadseachingAvance = 0;
+		creating = false;
 		File names = new File("data/names_gender.csv");
 		File lastNames = new File("data/lastNames.csv");
 		File countries = new File("data/population_by_country.csv");
@@ -106,25 +118,34 @@ public class DataBase {
 	 * @param picture
 	 * @throws ValuesIsEmptyException 
 	 * @throws InvalidValueException 
+	 * @throws Exception 
 	 * 
 	 */
-	public void createUser(String name, String lastName, String gender,double stature, String nationality, LocalDate dayOfBHD, String picture) throws ValuesIsEmptyException, InvalidValueException {
+	public User createUser(String name, String lastName, String gender,double stature, String nationality, LocalDate dayOfBHD) throws ValuesIsEmptyException, InvalidValueException, Exception {
 		
-		if(name.isEmpty()||lastName.isEmpty()||gender.isEmpty()||nationality.isEmpty()) {
-			throw new ValuesIsEmptyException();
-		}
-		if(stature<User.MIN_STATURE || stature>User.MAX_STATURE) {
-			throw new InvalidValueException();
-		}
-		if(dayOfBHD.compareTo(LocalDate.now())>0) {
-			throw new InvalidValueException();
-		}
-		String id = generateID(nationality);
-		User newUser = new User(name,lastName,id,gender,stature,nationality,dayOfBHD,picture);
-		usersByID.insert(id, newUser);
-		usersByName.insert(name, newUser);
-		usersByLastName.insert(lastName,newUser);
-		usersByFullName.insert(name+" "+lastName,newUser);
+			if(name.isEmpty()||lastName.isEmpty()||gender.isEmpty()||nationality.isEmpty()) {
+				throw new ValuesIsEmptyException();
+			}
+			if(stature<User.MIN_STATURE || stature>User.MAX_STATURE) {
+				throw new InvalidValueException();
+			}
+			if(dayOfBHD.compareTo(LocalDate.now())>0) {
+				throw new InvalidValueException();
+			}
+			String id = generateID(nationality);
+			URL url = new URL("https://thispersondoesnotexist.com/image");
+			BufferedImage c = ImageIO.read(url);
+			Image picture = SwingFXUtils.toFXImage(c, null);
+//			ImageIcon picture = new ImageIcon(c);
+			User newUser = new User(name,lastName,id,gender,stature,nationality,dayOfBHD,picture);
+			usersByID.insert(id, newUser);
+			usersByName.insert(name, newUser);
+			usersByLastName.insert(lastName,newUser);
+			usersByFullName.insert(name+" "+lastName,newUser);
+			return newUser;
+			
+	
+
 	}
 	/**
 	 * @param type
@@ -157,6 +178,27 @@ public class DataBase {
 		}
 		return null;
 	}
+	
+	
+	public Image generatePicture() {
+		
+		
+	
+		try {
+			URL url = new URL("https://thispersondoesnotexist.com/image");
+			BufferedImage c = ImageIO.read(url);
+			Image picture = SwingFXUtils.toFXImage(c, null);
+			return picture;
+		} catch (Exception e) {
+			
+			
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+
+		
+	}
 	//Si la tableView retorna el objeto guardado se deja user, de lo contrario se cambia a "String key" con el codigo del usuario
 	public boolean delateUser(User user) {
 		String id = user.getId();
@@ -171,7 +213,7 @@ public class DataBase {
 	}
 	
 	//En la GUI al editar llenar las barras con las obciones actuales
-	public  void updateUser(User user,String name, String lastName, String gender, double stature, String nationality, LocalDate dayOfBHD, String picture) throws ValuesIsEmptyException, InvalidValueException {
+	public  void updateUser(User user,String name, String lastName, String gender, double stature, String nationality, LocalDate dayOfBHD, Image picture) throws ValuesIsEmptyException, InvalidValueException {
 		if(name.isEmpty()||lastName.isEmpty()||gender.isEmpty()||nationality.isEmpty()) {
 			throw new ValuesIsEmptyException();
 		}
@@ -191,8 +233,9 @@ public class DataBase {
 	}
 	//String name, String lastName,String id, String gender,double stature, String nationality, LocalDate dayOfBHD, String picture
 	public void generateUsers(int ammount) throws FileNotFoundException {
-		
+		totalAmmount = ammount*4;
 		users = new User[ammount];
+		creating = true;
 		for (int i = 0; i < ammount; i++) {
 			String[] fullName = generateFullNames();
 			String name = fullName[0];
@@ -202,12 +245,12 @@ public class DataBase {
 			String id = generateID(nationality);
 			double stature = generateStature();
 			LocalDate dayOfBHD = generateAge();
-			String picture = generateImage();
+			Image picture = null;
 			User user = new User(name,lastName,id,gender,stature,nationality,dayOfBHD,picture);
 			users[i] = user;
-			loadseachingAvance = Double.parseDouble(i+"")/Double.parseDouble(ammount+"");
-			//System.out.println(i);
+			loadingAdvance = Double.parseDouble(i+"")/Double.parseDouble(ammount+"");
 		}
+		creating = false;
 	}
 	
 	//Order is Name>LastName>Gender
@@ -266,7 +309,7 @@ public class DataBase {
 		return currentCountry;
 	}
 	
-	private String generateID(String nationality) {
+	public String generateID(String nationality) {
 		String code = Math.abs(nationality.hashCode())+""+currentIDs;
 		currentIDs++;
 		return code;
@@ -276,51 +319,72 @@ public class DataBase {
 		return null;
 	}
 	
+	private void saveInAVL() {
+		creating = true;
+		CreatingUserThread threadByID = new CreatingUserThread(this,usersByID, users, ID);
+		CreatingUserThread threadByNAME = new CreatingUserThread(this,usersByName, users, NAME);
+		CreatingUserThread threadByLAST_NAME = new CreatingUserThread(this,usersByLastName, users,LAST_NAME);
+		CreatingUserThread threadByFULL_NAME = new CreatingUserThread(this,usersByFullName, users, FULL_NAME );
+		
+		threadByID.start();
+		threadByNAME.start();
+		threadByLAST_NAME.start();
+		threadByFULL_NAME.start();
+		
+	}
 	
 	public void saveData() throws IOException {
-		 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ID+FILE) );
+		 saveInAVL();
+		 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("data/"+ID+FILE) );
 		 oos.writeObject(usersByID);
 		 oos.close();
-		 oos = new ObjectOutputStream(new FileOutputStream(NAME+FILE) );
+		 oos = new ObjectOutputStream(new FileOutputStream("data/"+NAME+FILE) );
 		 oos.writeObject(usersByName);
 		 oos.close();
-		 oos = new ObjectOutputStream(new FileOutputStream(LAST_NAME+FILE) );
+		 oos = new ObjectOutputStream(new FileOutputStream("data/"+LAST_NAME+FILE) );
 		 oos.writeObject(usersByLastName);
 		 oos.close();
-		 oos = new ObjectOutputStream(new FileOutputStream(FULL_NAME+FILE) );
+		 oos = new ObjectOutputStream(new FileOutputStream("data/"+FULL_NAME+FILE) );
 		 oos.writeObject(usersByFullName);
 		 oos.close();
-
 	}
+	
 	@SuppressWarnings("unchecked")
 	public void loadData() throws IOException {
-		 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ID+FILE) );
+		 ObjectInputStream ois = new ObjectInputStream(new FileInputStream("data/"+ID+FILE) );
 		 try {
 			 usersByID  = (AVLTree<String,User>)ois.readObject();
 			 ois.close();
-			 ois = new ObjectInputStream(new FileInputStream(NAME+FILE));
+			 ois = new ObjectInputStream(new FileInputStream("data/"+NAME+FILE));
 			 usersByName =  (AVLTree<String,User>)ois.readObject();
 			 ois.close();
-			 ois = new ObjectInputStream(new FileInputStream(LAST_NAME+FILE));
+			 ois = new ObjectInputStream(new FileInputStream("data/"+LAST_NAME+FILE));
 			 usersByLastName =  (AVLTree<String,User>)ois.readObject();
 			 ois.close();
-			 ois = new ObjectInputStream(new FileInputStream(FULL_NAME+FILE));
+			 ois = new ObjectInputStream(new FileInputStream("data/"+FULL_NAME+FILE));
 			 usersByFullName =  (AVLTree<String,User>)ois.readObject();
-		} catch (ClassNotFoundException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}catch (ClassNotFoundException | IOException e) {
+			System.out.println("No encontrado");
 		}
 		 ois.close();
 		
 	}
-	public void printText() {
-		for (int i = 0; i < users.length; i++) {
-			System.out.println(users[i].toString());
-		}
-		
+	
+	public void advance() {
+		currentAmmount++;
 	}
 	public double getSeachingAvance() {
-		return loadseachingAvance;
+		loadingAdvance = currentAmmount/totalAmmount;
+		if(loadingAdvance==totalAmmount) {
+			creating = false;
+		}
+		return loadingAdvance;
+	}
+	public boolean isCreating() {
+		return creating;
+	}
+	public void setCreating(boolean creating) {
+		this.creating = creating;
 	}
 	
 }

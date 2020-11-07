@@ -7,7 +7,6 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -21,7 +20,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="566.0" prefWidth="664.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="566.0" prefWidth="664.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <Pane prefHeight="33.0" prefWidth="600.0" styleClass="Fondo" BorderPane.alignment="CENTER">
          <children>
@@ -34,9 +33,9 @@
       </Pane>
    </top>
    <center>
-      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+      <TabPane fx:id="TabPane" prefHeight="533.0" prefWidth="639.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
-          <Tab text="GENERAR DATOS">
+          <Tab fx:id="wGenerateData" text="GENERAR DATOS">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="Prueba">
                      <children>
@@ -46,20 +45,20 @@
                         <TextField fx:id="txtCantGenerate" layoutX="35.0" layoutY="169.0" prefHeight="25.0" prefWidth="121.0" text="1000000000" />
                         <Label layoutX="35.0" layoutY="135.0" text="Cuantos datos desea generar: " />
                         <Label layoutX="35.0" layoutY="325.0" text="Time:" />
-                        <TextField fx:id="txtTimeGen" layoutX="35.0" layoutY="355.0" />
+                        <TextField fx:id="txtTimeGen" disable="true" editable="false" layoutX="35.0" layoutY="355.0" />
                         <Separator layoutX="212.0" layoutY="6.0" orientation="VERTICAL" prefHeight="424.0" prefWidth="23.0" />
                         <Label fx:id="ProgressLabel" layoutX="67.0" layoutY="470.0" prefHeight="17.0" prefWidth="533.0" text="Label" />
                      </children>
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab text="AGREGAR USUARIO">
+          <Tab fx:id="wAddUser" text="AGREGAR USUARIO">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="581.0" prefWidth="600.0" styleClass="Prueba">
                      <children>
                         <Label layoutX="107.0" layoutY="256.0" text="Nombre:" />
                         <Label layoutX="538.0" layoutY="388.0" text="Codigo:" />
-                        <Label layoutX="314.0" layoutY="256.0" text="Apellido:" />
+                        <Label layoutX="342.0" layoutY="256.0" text="Apellido:" />
                         <Label layoutX="102.0" layoutY="301.0" text="Genero:" />
                         <RadioButton fx:id="tgFemale" layoutX="236.0" layoutY="301.0" mnemonicParsing="false" text="Femenino">
                            <toggleGroup>
@@ -69,28 +68,28 @@
                         <Label layoutX="43.0" layoutY="388.0" text="Fecha de nacimiento:" />
                         <Label layoutX="108.0" layoutY="346.0" text="Estatura:" />
                         <DatePicker fx:id="txtDateBHD" layoutX="165.0" layoutY="384.0" />
-                        <TextField fx:id="txtLastName" editable="false" layoutX="374.0" layoutY="252.0" />
-                        <TextField fx:id="txtName" layoutX="157.0" layoutY="252.0" />
+                        <TextField fx:id="txtLastName" layoutX="403.0" layoutY="252.0" />
+                        <TextField fx:id="txtName" layoutX="165.0" layoutY="252.0" prefHeight="25.0" prefWidth="138.0" />
                         <TextField fx:id="btCodigo" disable="true" editable="false" layoutX="526.0" layoutY="405.0" prefHeight="25.0" prefWidth="66.0" />
-                        <Spinner fx:id="txtHeight" layoutX="161.0" layoutY="342.0" />
                         <Button fx:id="btAddUser" layoutX="281.0" layoutY="442.0" mnemonicParsing="false" onAction="#addUser" text="AGREGAR USUARIO" />
                         <ImageView fx:id="imageviewLoad" fitHeight="208.0" fitWidth="213.0" layoutX="252.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true" styleClass="Prueba" AnchorPane.leftAnchor="252.0">
                            <effect>
                               <DropShadow color="#cd0505" />
                            </effect>
                         </ImageView>
-                        <Label layoutX="115.0" layoutY="49.0" text="Seleccione una imagen" />
-                        <Button fx:id="btImage" layoutX="151.0" layoutY="85.0" mnemonicParsing="false" text="Imagen" />
+                        <Label fx:id="lbImage" layoutX="247.0" layoutY="23.0" prefHeight="175.0" prefWidth="185.0" text="Load image" />
+                        <TextField fx:id="txtHeight" layoutX="165.0" layoutY="342.0" />
+                        <Label layoutX="328.0" layoutY="346.0" text="Nacionalidad:" />
+                        <ComboBox fx:id="comboBoxNationality" layoutX="409.0" layoutY="342.0" prefWidth="150.0" />
                      </children>
                   </AnchorPane>
             </content>
           </Tab>
-            <Tab text="BUSCAR">
+            <Tab fx:id="wSearch" text="BUSCAR">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="Prueba">
                      <children>
-                        <Button fx:id="btBuscar" layoutX="501.0" layoutY="75.0" mnemonicParsing="false" onAction="#searchUser" text="Buscar" />
-                        <TextField fx:id="txtBuscar" layoutX="104.0" layoutY="75.0" prefHeight="25.0" prefWidth="378.0" />
+                        <TextField fx:id="txtBuscar" layoutX="104.0" layoutY="75.0" onKeyTyped="#sensitiveSearchKeyT" prefHeight="25.0" prefWidth="378.0" />
                         <TableView fx:id="tableUsers" layoutX="104.0" layoutY="134.0" prefHeight="329.0" prefWidth="309.0">
                           <columns>
                             <TableColumn fx:id="cvID" prefWidth="84.0" text="CODIGO" />
@@ -101,37 +100,42 @@
                         <Label layoutX="98.0" layoutY="35.0" text="Usuario a buscar" />
                         <Button fx:id="btActualizeData" layoutX="476.0" layoutY="216.0" mnemonicParsing="false" onAction="#updateUser" text="Actualizar datos" />
                         <ComboBox fx:id="comboBoxSearch" layoutX="196.0" layoutY="31.0" prefWidth="150.0" />
+                        <Button fx:id="btnSeatch" layoutX="539.0" layoutY="75.0" mnemonicParsing="false" onAction="#searchUser" prefHeight="25.0" prefWidth="77.0" text="seach" />
                      </children>
                   </AnchorPane>
               </content>
             </Tab>
-            <Tab text="ACTUALIZAR">
+            <Tab fx:id="wUpdate" disable="true" text="ACTUALIZAR">
               <content>
-                <AnchorPane disable="true" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="Prueba">
+                <AnchorPane fx:id="PaneUpdate" disable="true" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="Prueba">
                      <children>
                         <Label layoutX="35.0" layoutY="286.0" text="Nombre:" />
                         <Label layoutX="37.0" layoutY="39.0" text="Codigo:" />
-                        <Label layoutX="35.0" layoutY="340.0" text="Apellido:" />
-                        <Label layoutX="37.0" layoutY="187.0" text="Genero:" />
+                        <Label layoutX="36.0" layoutY="332.0" text="Apellido:" />
+                        <Label layoutX="38.0" layoutY="182.0" text="Genero:" />
                         <RadioButton fx:id="tgFemale1" layoutX="33.0" layoutY="211.0" mnemonicParsing="false" text="Femenino">
                            <toggleGroup>
                               <ToggleGroup fx:id="tgGenderA" />
                            </toggleGroup></RadioButton>
-                        <RadioButton fx:id="tgMale1" layoutX="141.0" layoutY="211.0" mnemonicParsing="false" text="Masculino" toggleGroup="$tgGenderA" />
+                        <RadioButton fx:id="tgMale1" layoutX="151.0" layoutY="211.0" mnemonicParsing="false" text="Masculino" toggleGroup="$tgGenderA" />
                         <Label layoutX="33.0" layoutY="244.0" text="Fecha de cumpleaños:" />
-                        <Label layoutX="36.0" layoutY="383.0" text="Estatura:" />
-                        <DatePicker fx:id="txtDateBHDA" layoutX="151.0" layoutY="240.0" />
-                        <TextField fx:id="txtLastNameA" editable="false" layoutX="151.0" layoutY="282.0" />
-                        <TextField fx:id="txtNameA" layoutX="142.0" layoutY="328.0" />
+                        <Label layoutX="35.0" layoutY="413.0" text="Estatura:" />
+                        <DatePicker fx:id="txtDateBHDA" layoutX="163.0" layoutY="240.0" prefHeight="25.0" prefWidth="148.0" />
+                        <TextField fx:id="txtLastNameA" layoutX="163.0" layoutY="328.0" />
+                        <TextField fx:id="txtNameA" layoutX="163.0" layoutY="282.0" />
                         <TextField fx:id="btCodigoA" disable="true" editable="false" layoutX="37.0" layoutY="63.0" prefHeight="25.0" prefWidth="66.0" />
-                        <Spinner fx:id="txtHeightA" layoutX="131.0" layoutY="379.0" />
-                        <Button fx:id="btConfirmUser" layoutX="135.0" layoutY="438.0" mnemonicParsing="false" onAction="#confirmUdpateUser" text="CONFIRMAR " />
-                        <ImageView fitHeight="208.0" fitWidth="213.0" layoutX="332.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true" styleClass="Prueba">
+                        <Button fx:id="btConfirmUser" layoutX="129.0" layoutY="451.0" mnemonicParsing="false" onAction="#confirmUdpateUser" text="CONFIRMAR " />
+                        <ImageView fx:id="txtImageA" fitHeight="136.0" fitWidth="123.0" layoutX="474.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true" styleClass="Prueba">
                            <effect>
                               <DropShadow color="#cd0505" />
                            </effect>
                         </ImageView>
                         <Button fx:id="btDeleteUser" layoutX="474.0" layoutY="451.0" mnemonicParsing="false" onAction="#deleteUser" text="ELIMINAR USUARIO" />
+                        <TextField fx:id="txtHeightA" layoutX="163.0" layoutY="409.0" />
+                        <ComboBox fx:id="comboBoxNationalityA" layoutX="163.0" layoutY="372.0" prefWidth="150.0" />
+                        <Label layoutX="37.0" layoutY="376.0" text="Nacionalidad" />
+                        <Button fx:id="btnImage" layoutX="484.0" layoutY="207.0" mnemonicParsing="false" onAction="#UpdateImage" text="Cambiar Imagen" />
+                        <Label fx:id="lbImageUpdate" layoutX="201.0" layoutY="20.0" prefHeight="155.0" prefWidth="224.0" text="Actualizar imagen" />
                      </children>
                   </AnchorPane>
               </content>

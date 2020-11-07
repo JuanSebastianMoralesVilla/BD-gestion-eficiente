@@ -1,6 +1,7 @@
 package ui;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +17,7 @@ public class Main  extends Application{
 	private DataBase miDataBase;
 	
 	
-public Main() {
+public Main() throws IOException {
 	// TODO Auto-generated constructor stub
 	
 	miDataBase= new DataBase();
@@ -46,7 +47,8 @@ launch (args);
 		//stage.getIcons().add(new Image(fis));
 		stage.setTitle("BD VIP");
 		stage.show();
-		dbGUI.initialize();
+		
+		
 	}
 
 }

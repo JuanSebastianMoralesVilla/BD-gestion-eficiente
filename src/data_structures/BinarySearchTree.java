@@ -1,12 +1,13 @@
 package data_structures;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import threads.RunningThread;
 import threads.SearchingThread;
 
 
-public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearchTree<K, E> {
+public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearchTree<K, E> , Serializable{
 	private Node<K,E> root;
 	private boolean searching;
 	private int amountSeach;
@@ -384,13 +385,13 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 	public ArrayList<E> sensitiveSearch(K key) {
 		amountSeach = 0;
 		ArrayList<E> array = new ArrayList<>();
-		Node<K,E> current = searchValueSensitive(this.root,key);
-		
+		//Node<K,E> current = searchValueSensitive(this.root,key);
+		Node<K,E> current = this.root;
 		if(current!=null) {
 			searching = true;
+			
 			if(current.getHeight()>10) {
 				
-				array.add(current.getElement());
 				SearchingThread<K,E> searchingThread1 = new SearchingThread<K,E>(this,current.getLeft(), key, array);
 				SearchingThread<K,E> searchingThread2 = new SearchingThread<K,E>(this,current.getRight(), key, array);
 				searchingThread1.start();
@@ -405,6 +406,7 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		}
 		return array;
 	}
+	/*
 	private Node<K,E> searchValueSensitive(Node<K,E> root,K key){
 		if(root!=null && searching) {
 			int aux = root.startsWith(key);
@@ -418,6 +420,7 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		}
 		return null;
 	}
+	*/
 	public ArrayList<E> searchValuesSensitiveR(ArrayList<E> array,Node<K,E> root,K key){
 		if(root!=null && searching ) {
 			int aux = root.startsWith(key);
@@ -426,7 +429,7 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 				if( amountSeach<=20) {
 					array.add(root.getElement());
 				}else {
-					array.clear();
+					//array.clear();
 				}
 			}
 			searchValuesSensitiveR(array,root.getLeft(),key);

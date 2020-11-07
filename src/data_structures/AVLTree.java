@@ -2,8 +2,7 @@ package data_structures;
 
 import java.io.Serializable;
 
-@SuppressWarnings("serial")
-public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> implements Serializable{
+public class AVLTree<K extends Comparable<K>,E extends Serializable> extends BinarySearchTree <K,E> implements Serializable{
 	
 	public AVLTree() {
 		super();
@@ -242,7 +241,6 @@ public class AVLTree<K extends Comparable<K>,E> extends BinarySearchTree <K,E> i
 				leftCases(node.getLeft());
 				
 			}
-			
 			balance(parent);
 		}
 	}

@@ -1,20 +1,19 @@
 package model;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
+import custom_exceptions.InvalidValueException;
+import custom_exceptions.ValuesIsEmptyException;
+
 public class AuxTest {
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, ValuesIsEmptyException, InvalidValueException {
 		double start = System.currentTimeMillis();
 		DataBase data = new DataBase();
-		data.generateUsers(100000);
-		ArrayList<User> array = data.sensitiveSearch("A", data.NAME);
-		System.out.println(array.size());
-		for (int i = 0; i < args.length; i++) {
-			System.out.println(array.get(i).toString());
-		}
-		//double finish = System.currentTimeMillis();
-		//System.out.println((finish-start)/1000);
-		//System.out.println(data.getUsersByID().preOrder().size());
+		data.generateUsers(100);
+		data.saveData();
+		//System.out.println(data.sensitiveSearch("C", data.NAME));
 	}
+	
 }

@@ -3156,9 +3156,10 @@ public class Test {
 		alv.insert(396, "396");//
 		alv.insert(30, "30");//
 		alv.insert(31, "31");//
-		ArrayList<String> array = alv.sensitiveSearch(396);
 		
-		System.out.println(array.size());
+		ArrayList<String> array = alv.sensitiveSearch(3);
+		
+		System.out.println(array);
 		
 		
 		

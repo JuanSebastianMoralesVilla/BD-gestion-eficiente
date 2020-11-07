@@ -1,8 +1,13 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class User {
+import javax.swing.ImageIcon;
+
+import javafx.scene.image.Image;
+
+public class User implements Serializable{
 	
 	@Override
 	public String toString() {
@@ -17,13 +22,13 @@ public class User {
 	private double stature;
 	private String nationality;
 	private LocalDate dayOfBHD;
-	private String picture;
+	public Image picture;
 	public final static String MALE = "male";
 	public final static String FEMALE = "female";
 	public final static double MIN_STATURE = 50;
 	public final static double MAX_STATURE = 300;
 	
-	public User(String name, String lastName,String id, String gender,double stature, String nationality, LocalDate dayOfBHD, String picture) {
+	public User(String name, String lastName,String id, String gender,double stature, String nationality, LocalDate dayOfBHD, Image picture) {
 		this.id = id;
 		this.name = name;
 		this.lastName = lastName;
@@ -82,11 +87,11 @@ public class User {
 		this.dayOfBHD = dayOfBHD;
 	}
 
-	public String getPicture() {
+	public Image getPicture() {
 		return picture;
 	}
 	
-	public void setPicture(String picture) {
+	public void setPicture(Image picture) {
 		this.picture = picture;
 	}
 
