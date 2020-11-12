@@ -2,6 +2,8 @@ package data_structures;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import threads.RunningThread;
 import threads.SearchingThread;
@@ -406,7 +408,7 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		}
 		return array;
 	}
-	/*
+	
 	private Node<K,E> searchValueSensitive(Node<K,E> root,K key){
 		if(root!=null && searching) {
 			int aux = root.startsWith(key);
@@ -420,7 +422,7 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		}
 		return null;
 	}
-	*/
+	
 	public ArrayList<E> searchValuesSensitiveR(ArrayList<E> array,Node<K,E> root,K key){
 		if(root!=null && searching ) {
 			int aux = root.startsWith(key);
@@ -434,6 +436,7 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 			}
 			searchValuesSensitiveR(array,root.getLeft(),key);
 			searchValuesSensitiveR(array,root.getRight(),key);
+			
 		}
 		return array;
 	}

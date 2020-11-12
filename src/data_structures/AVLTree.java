@@ -20,15 +20,15 @@ public class AVLTree<K extends Comparable<K>,E extends Serializable> extends Bin
 		balance(newNode);
 	}
 	
-	@Override
-	public boolean deleteValue(K key) {
-		if(getRoot()!=null && getRoot().getKey().toString().compareTo(key.toString())==0) {
-			Node<K,E> aux = deleteValue(getRoot(),key);
+	
+	public boolean deleteValue(K key,E element) {
+		if(getRoot()!=null && getRoot().getKey().toString().compareTo(key.toString())==0 && element==getRoot().getElement()) {
+			Node<K,E> aux = deleteValue(getRoot(),key,element);
 			setWeight(getWeight() - 1);
 			balance(aux);
 			return true;
 		}else {
-			Node<K,E> aux = deleteValue(getRoot(),key);
+			Node<K,E> aux = deleteValue(getRoot(),key,element);
 			if(aux!=null) {
 				setWeight(getWeight() - 1);
 				balance(aux);
@@ -39,12 +39,12 @@ public class AVLTree<K extends Comparable<K>,E extends Serializable> extends Bin
 	}
 	
 
-	private Node<K,E> deleteValue(Node<K,E> root,K value) {
+	private Node<K,E> deleteValue(Node<K,E> root,K value,E element) {
 		if(root==null) {
 			return null;
 		}
 		if(value.toString().compareTo(root.getKey().toString())>0) {
-				Node<K,E> aux = deleteValue(root.getRight(), value);
+				Node<K,E> aux = deleteValue(root.getRight(), value,element);
 				if(aux!=null) {
 					if(root.getRight()!=null && root.getRight().getHeight()<root.getHeight()-1) {
 						root.setHeight(root.getHeight()-1);
@@ -53,14 +53,31 @@ public class AVLTree<K extends Comparable<K>,E extends Serializable> extends Bin
 				return aux;
 				
 		}else if(value.toString().compareTo(root.getKey().toString())<0) {
-				Node<K,E> aux = deleteValue(root.getLeft(),value);
+				Node<K,E> aux = deleteValue(root.getLeft(),value,element);
 				if(aux!=null) {
 					if(root.getLeft()!=null && root.getLeft().getHeight()<root.getHeight()-1) {
 						root.setHeight(root.getHeight()-1);
 					}
 				}
 				return aux;	
-		}else {
+		}else if(element!=root.getElement()) {
+			Node<K,E> aux = deleteValue(root.getRight(), value,element);
+			if(aux!=null) {
+				if(root.getRight()!=null && root.getRight().getHeight()<root.getHeight()-1) {
+					root.setHeight(root.getHeight()-1);
+				}
+			}else {
+				aux = deleteValue(root.getLeft(),value,element);
+				if(aux!=null) {
+					if(root.getLeft()!=null && root.getLeft().getHeight()<root.getHeight()-1) {
+						root.setHeight(root.getHeight()-1);
+					}
+				}
+			}
+			
+			return aux;
+			
+		}else{
 			if(root.getLeft()!=null && root.getRight()!=null) {
 				return deleteTreeTwoSons(root);	
 				

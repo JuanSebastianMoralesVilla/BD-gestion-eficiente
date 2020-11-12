@@ -45,39 +45,6 @@ public class DataBaseTest {
 		dataBase.createUser("Cristian", "Morales",  "Male", 1.75, "Colombia", LocalDate.now());
 		dataBase.createUser("Andres", "Aristi", "Male", 1.78, "Colombia", LocalDate.now());
 	}
-
-	
-	@Test
-	public void searchTest() {
-		setup1();
-
-		assertEquals(null, dataBase.searchUser("0001"), "el usuario no exite");
-	}
-
-	@Test
-	public void searchTest1() {
-		setup1();
-
-		assertEquals(null, dataBase.searchUser("0001"), "el usuario no exite");
-	}
-
-	@Test
-	public void searchTest2() {
-		setup1();
-
-		assertEquals(null, dataBase.searchUser("0002"), "el usuario no exite");
-	}
-
-	@Test
-	public void searchTest3() {
-		setup1();
-
-		assertEquals(null, dataBase.searchUser("0003"), "el usuario no exite");
-	}
-	
-	
-	
-	
 	
 	@Test
 	public void addUserTest1() throws ValuesIsEmptyException, InvalidValueException {

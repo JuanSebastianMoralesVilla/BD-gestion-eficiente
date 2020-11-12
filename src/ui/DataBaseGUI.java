@@ -1,21 +1,13 @@
 package ui;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javafx.scene.control.*;
 
-import custom_exceptions.InvalidValueException;
-import custom_exceptions.ValuesIsEmptyException;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -32,13 +24,13 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import model.DataBase;
 import model.User;
 import threads.CreatingDataThread;
+import threads.DataSearchingThread;
 import threads.ProgressThread;
 
 public class DataBaseGUI {
@@ -264,7 +256,6 @@ public class DataBaseGUI {
 		String height = txtHeight.getText();		
 		LocalDate dayOfBHD = txtDateBHD.getValue();
 		String nationality = comboBoxNationality.getValue();
-		String picture = "";
 		
 		if (name.equals("")|| lastName.equals("") || height.equals("") || dayOfBHD.equals("")) {
 			JOptionPane.showMessageDialog(null, "por favor complete todos los campos");
@@ -305,26 +296,25 @@ public class DataBaseGUI {
 		String height = txtHeightA.getText();		
 		LocalDate dayOfBHD = txtDateBHDA.getValue();
 		String nationality = comboBoxNationalityA.getValue();
-		String picture = "";
 		
 		if (name.equals("")|| lastName.equals("") || height.equals("") || dayOfBHD.equals("")) {
 			JOptionPane.showMessageDialog(null, "por favor complete todos los campos");
-		}
-		System.out.println(height);
-		double stature = Double.parseDouble(height);
-		
-		database.updateUser(user, name, lastName, gender, stature, nationality, dayOfBHD, user.picture);
-		ImageView view = new ImageView(user.picture);
-		view.setFitHeight(120);
-		view.setFitWidth(120);
-	    lbImageUpdate.setGraphic(view);
-	    lbImageUpdate.setText("");
-		
-		JOptionPane.showMessageDialog(null,"el usuario "+ user.getName()+ " "+ user.getLastName() + "\n"+ "con codigo "+ user.getId()+ "\n"+ "fue actualizado exitosamente");
-		
-
-		
+		}else {
+			System.out.println(height);
+			double stature = Double.parseDouble(height);
 			
+			database.updateUser(user, name, lastName, gender, stature, nationality, dayOfBHD, user.picture);
+			ImageView view = new ImageView(user.picture);
+			view.setFitHeight(120);
+			view.setFitWidth(120);
+		    lbImageUpdate.setGraphic(view);
+		    lbImageUpdate.setText("");
+			JOptionPane.showMessageDialog(null,"el usuario "+ user.getName()+ " "+ user.getLastName() + "\n"+ "con codigo "+ user.getId()+ "\n"+ "fue actualizado exitosamente");
+			TabPane.getSelectionModel().select(wSearch);
+			sensitiveSearchKeyT(null);
+			wUpdate.setDisable(true);
+		}
+		
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(null, "ingrese una estatura valida");
 			// TODO: handle exception
@@ -337,7 +327,11 @@ public class DataBaseGUI {
 
 	@FXML
 	void deleteUser(ActionEvent event) {
-
+		database.delateUser(user);
+		TabPane.getSelectionModel().select(wSearch);
+		txtBuscar.setText(" ");
+		sensitiveSearchKeyT(null);
+		wUpdate.setDisable(true);
 	}
 
 	@FXML
@@ -365,7 +359,6 @@ public class DataBaseGUI {
 		database.setCreating(true);
 		ProgressThread pt = new ProgressThread(database, this);
 		pt.start();
-		
 	}
 	
 	@FXML
@@ -400,25 +393,7 @@ public class DataBaseGUI {
 		    lbImageUpdate.setGraphic(view);
 		    lbImageUpdate.setText("");
 		}
-		
-		
 	}
-    @FXML
-    void searchUser(ActionEvent event) {
-    	String searchType = comboBoxSearch.getValue();
-		String value = txtBuscar.getText();
-		ArrayList<User> users = database.sensitiveSearch(value,searchType);
-		
-		ObservableList<User> observableList;
-		System.out.println(users);
-		observableList = FXCollections.observableArrayList(users);
-		tableUsers.setItems(observableList);
-		
-		cvID.setCellValueFactory(new PropertyValueFactory<User, String>("id"));
-		cvName.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
-		cvLastName.setCellValueFactory(new PropertyValueFactory<User, String>("lastName"));
-    }
-    
 
 	public void setProgressBar() {
 		double start = System.currentTimeMillis();
@@ -438,7 +413,6 @@ public class DataBaseGUI {
 			}
 		}
 		
-		
 		wGenerateData.setDisable(false);
 		wAddUser.setDisable(false);
 		wSearch.setDisable(false);
@@ -448,55 +422,34 @@ public class DataBaseGUI {
 		double end = System.currentTimeMillis();
 		txtTimeGen.setText((end-start)+"");
 	}
-	@FXML
-    void sensitiveSearch(KeyEvent event) {
-    	String searchType = comboBoxSearch.getValue();
-		String value = txtBuscar.getText().toUpperCase();
-		ArrayList<User> users = database.sensitiveSearch(value,searchType);
-		
-		ObservableList<User> observableList;
-		System.out.println(users);
-		observableList = FXCollections.observableArrayList(users);
-		tableUsers.setItems(observableList);
-		
-		cvID.setCellValueFactory(new PropertyValueFactory<User, String>("id"));
-		cvName.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
-		cvLastName.setCellValueFactory(new PropertyValueFactory<User, String>("lastName"));
-    }
-	
-    @FXML
-    void sensitiveSearchKeyR(KeyEvent event) {
-    	/*
-    	String searchType = comboBoxSearch.getValue();
-		String value = txtBuscar.getText();
-		ArrayList<User> users = database.sensitiveSearch(value,searchType);
-		
-		ObservableList<User> observableList;
-		System.out.println(users);
-		observableList = FXCollections.observableArrayList(users);
-		tableUsers.setItems(observableList);
-		
-		cvID.setCellValueFactory(new PropertyValueFactory<User, String>("id"));
-		cvName.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
-		cvLastName.setCellValueFactory(new PropertyValueFactory<User, String>("lastName"));
-		*/
-    }
 	
     @FXML
     void sensitiveSearchKeyT(KeyEvent event) {
-    	/*
+    	if(tableUsers.getItems()!=null) {
+    		tableUsers.getItems().clear();
+    	}
     	String searchType = comboBoxSearch.getValue();
-		String value = txtBuscar.getText();
-		ArrayList<User> users = database.sensitiveSearch(value,searchType);
+		String value = txtBuscar.getText().toUpperCase();
+		System.out.println(value);
+		if(!value.isEmpty()) {
+			DataSearchingThread dataS = new DataSearchingThread(database, this, value, searchType);
+			dataS.start();
+		}else {
+			tableUsers.setItems(null);
+		}
 		
-		ObservableList<User> observableList;
-		System.out.println(users);
+    }
+    
+    public void loadTable(ArrayList<User> auxUsers) {
+    	@SuppressWarnings("unchecked")
+		ArrayList<User> users = (ArrayList<User>) auxUsers.clone();
+    	System.out.println(users);
+    	ObservableList<User> observableList;
 		observableList = FXCollections.observableArrayList(users);
 		tableUsers.setItems(observableList);
+		
 		cvID.setCellValueFactory(new PropertyValueFactory<User, String>("id"));
 		cvName.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
 		cvLastName.setCellValueFactory(new PropertyValueFactory<User, String>("lastName"));
-		*/
     }
-
 }

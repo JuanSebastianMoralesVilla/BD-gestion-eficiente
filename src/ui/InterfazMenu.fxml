@@ -63,7 +63,8 @@
                         <RadioButton fx:id="tgFemale" layoutX="236.0" layoutY="301.0" mnemonicParsing="false" text="Femenino">
                            <toggleGroup>
                               <ToggleGroup fx:id="tgGender" />
-                           </toggleGroup></RadioButton>
+                           </toggleGroup>
+                        </RadioButton>
                         <RadioButton fx:id="tgMale" layoutX="156.0" layoutY="301.0" mnemonicParsing="false" text="Masculino" toggleGroup="$tgGender" />
                         <Label layoutX="43.0" layoutY="388.0" text="Fecha de nacimiento:" />
                         <Label layoutX="108.0" layoutY="346.0" text="Estatura:" />
@@ -100,7 +101,6 @@
                         <Label layoutX="98.0" layoutY="35.0" text="Usuario a buscar" />
                         <Button fx:id="btActualizeData" layoutX="476.0" layoutY="216.0" mnemonicParsing="false" onAction="#updateUser" text="Actualizar datos" />
                         <ComboBox fx:id="comboBoxSearch" layoutX="196.0" layoutY="31.0" prefWidth="150.0" />
-                        <Button fx:id="btnSeatch" layoutX="539.0" layoutY="75.0" mnemonicParsing="false" onAction="#searchUser" prefHeight="25.0" prefWidth="77.0" text="seach" />
                      </children>
                   </AnchorPane>
               </content>
@@ -116,7 +116,8 @@
                         <RadioButton fx:id="tgFemale1" layoutX="33.0" layoutY="211.0" mnemonicParsing="false" text="Femenino">
                            <toggleGroup>
                               <ToggleGroup fx:id="tgGenderA" />
-                           </toggleGroup></RadioButton>
+                           </toggleGroup>
+                        </RadioButton>
                         <RadioButton fx:id="tgMale1" layoutX="151.0" layoutY="211.0" mnemonicParsing="false" text="Masculino" toggleGroup="$tgGenderA" />
                         <Label layoutX="33.0" layoutY="244.0" text="Fecha de cumpleaños:" />
                         <Label layoutX="35.0" layoutY="413.0" text="Estatura:" />

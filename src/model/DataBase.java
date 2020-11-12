@@ -1,6 +1,7 @@
 package model;
 
 import java.awt.image.BufferedImage;
+
 import java.io.BufferedReader;
 
 import java.io.File;
@@ -11,14 +12,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 
 import custom_exceptions.InvalidValueException;
 import custom_exceptions.ValuesIsEmptyException;
@@ -142,6 +141,7 @@ public class DataBase {
 			URL url = new URL("https://thispersondoesnotexist.com/image");
 			BufferedImage c = ImageIO.read(url);
 			Image picture = SwingFXUtils.toFXImage(c, null);
+			
 //			ImageIcon picture = new ImageIcon(c);
 			User newUser = new User(name,lastName,id,gender,stature,nationality,dayOfBHD,picture);
 			usersByID.insert(id, newUser);
@@ -158,12 +158,12 @@ public class DataBase {
 	 * @param key
 	 * @return
 	 */
-	public User searchUser(String key) {
-		
-		return usersByID.searchValue(key);
-		
-	}
+	
 	public ArrayList<User> sensitiveSearch(String key, String parameter) {
+		usersByID.setSearching(false);
+		usersByName.setSearching(false);
+		usersByLastName.setSearching(false);
+		usersByFullName.setSearching(false);
 		switch(parameter) {
 		case ID:
 			usersByID.stopSearch();
@@ -179,7 +179,7 @@ public class DataBase {
 			
 		case FULL_NAME:
 			usersByLastName.stopSearch();
-			return usersByLastName.sensitiveSearch(key);
+			return usersByFullName.sensitiveSearch(key);
 			
 		}
 		return null;
@@ -203,7 +203,6 @@ public class DataBase {
 			return null;
 		}
 
-		
 	}
 	//Si la tableView retorna el objeto guardado se deja user, de lo contrario se cambia a "String key" con el codigo del usuario
 	public boolean delateUser(User user) {
@@ -211,15 +210,16 @@ public class DataBase {
 		String name = user.getName();
 		String lastName = user.getLastName();
 		String fullName = name + " " + lastName;
-		boolean result = usersByID.deleteValue(id);
-		usersByName.deleteValue(name);
-		usersByLastName.deleteValue(lastName);
-		usersByFullName.deleteValue(fullName);
+		boolean result = usersByID.deleteValue(id,user);
+		usersByName.deleteValue(name,user);
+		usersByLastName.deleteValue(lastName,user);
+		usersByFullName.deleteValue(fullName,user); 
 		return result;
 	}
 	
 	//En la GUI al editar llenar las barras con las obciones actuales
 	public  void updateUser(User user,String name, String lastName, String gender, double stature, String nationality, LocalDate dayOfBHD, Image picture) throws ValuesIsEmptyException, InvalidValueException {
+		
 		if(name.isEmpty()||lastName.isEmpty()||gender.isEmpty()||nationality.isEmpty()) {
 			throw new ValuesIsEmptyException();
 		}
@@ -229,13 +229,19 @@ public class DataBase {
 		if(dayOfBHD.compareTo(LocalDate.now())>0) {
 			throw new InvalidValueException();
 		}
+		delateUser(user);
+		
 		user.setName(name);
-		user.setLastName(name);
+		user.setLastName(lastName);
 		user.setGender(gender);
 		user.setStature(stature);
 		user.setNationality(nationality);
 		user.setDayOfBHD(dayOfBHD);
 		user.setPicture(picture);
+		usersByID.insert(user.getId(), user);
+		usersByName.insert(name, user);
+		usersByLastName.insert(lastName,user);
+		usersByFullName.insert(name+" "+lastName,user);
 	}
 	//String name, String lastName,String id, String gender,double stature, String nationality, LocalDate dayOfBHD, String picture
 	public void generateUsers(int ammount) throws FileNotFoundException {
@@ -326,9 +332,6 @@ public class DataBase {
 		return code;
 	}
 	
-	private String generateImage() {
-		return null;
-	}
 	
 	public void saveInAVL() {
 		creating = true;
@@ -380,7 +383,9 @@ public class DataBase {
 		 ois.close();
 		
 	}
-	
+	public boolean isSearching() {
+		return usersByID.isSearching() || usersByFullName.isSearching() || usersByName.isSearching() || usersByLastName.isSearching();
+	}
 	public void advance() {
 		currentAmmount++;
 		loadingAdvance = currentAmmount/totalAmmount;

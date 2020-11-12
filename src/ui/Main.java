@@ -44,7 +44,6 @@ launch (args);
 		stage.setScene(sc);
 		stage.centerOnScreen();
 		stage.setResizable(true);
-		//stage.getIcons().add(new Image(fis));
 		stage.setTitle("BD VIP");
 		stage.show();
 		
