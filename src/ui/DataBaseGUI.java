@@ -418,21 +418,7 @@ public class DataBaseGUI {
 		cvName.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
 		cvLastName.setCellValueFactory(new PropertyValueFactory<User, String>("lastName"));
     }
-    @FXML
-    void sensitiveSearch(KeyEvent event) {
-    	String searchType = comboBoxSearch.getValue();
-		String value = txtBuscar.getText();
-		ArrayList<User> users = database.sensitiveSearch(value,searchType);
-		
-		ObservableList<User> observableList;
-		System.out.println(users);
-		observableList = FXCollections.observableArrayList(users);
-		tableUsers.setItems(observableList);
-		
-		cvID.setCellValueFactory(new PropertyValueFactory<User, String>("id"));
-		cvName.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
-		cvLastName.setCellValueFactory(new PropertyValueFactory<User, String>("lastName"));
-    }
+    
 
 	public void setProgressBar() {
 		double start = System.currentTimeMillis();
@@ -462,11 +448,10 @@ public class DataBaseGUI {
 		double end = System.currentTimeMillis();
 		txtTimeGen.setText((end-start)+"");
 	}
-	
-    @FXML
-    void sensitiveSearchKeyR(KeyEvent event) {
+	@FXML
+    void sensitiveSearch(KeyEvent event) {
     	String searchType = comboBoxSearch.getValue();
-		String value = txtBuscar.getText();
+		String value = txtBuscar.getText().toUpperCase();
 		ArrayList<User> users = database.sensitiveSearch(value,searchType);
 		
 		ObservableList<User> observableList;
@@ -480,7 +465,8 @@ public class DataBaseGUI {
     }
 	
     @FXML
-    void sensitiveSearchKeyT(KeyEvent event) {
+    void sensitiveSearchKeyR(KeyEvent event) {
+    	/*
     	String searchType = comboBoxSearch.getValue();
 		String value = txtBuscar.getText();
 		ArrayList<User> users = database.sensitiveSearch(value,searchType);
@@ -493,6 +479,24 @@ public class DataBaseGUI {
 		cvID.setCellValueFactory(new PropertyValueFactory<User, String>("id"));
 		cvName.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
 		cvLastName.setCellValueFactory(new PropertyValueFactory<User, String>("lastName"));
+		*/
+    }
+	
+    @FXML
+    void sensitiveSearchKeyT(KeyEvent event) {
+    	/*
+    	String searchType = comboBoxSearch.getValue();
+		String value = txtBuscar.getText();
+		ArrayList<User> users = database.sensitiveSearch(value,searchType);
+		
+		ObservableList<User> observableList;
+		System.out.println(users);
+		observableList = FXCollections.observableArrayList(users);
+		tableUsers.setItems(observableList);
+		cvID.setCellValueFactory(new PropertyValueFactory<User, String>("id"));
+		cvName.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
+		cvLastName.setCellValueFactory(new PropertyValueFactory<User, String>("lastName"));
+		*/
     }
 
 }
