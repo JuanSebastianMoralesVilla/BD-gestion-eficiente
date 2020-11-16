@@ -21,6 +21,15 @@ public class DataSearchingThread extends Thread{
 	@Override
 	public void run() {
 		users = dataBase.sensitiveSearch(key, parameter);
+		while(dataBase.isSearching()) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		databaseGUI.loadTable(users);
 	}
 }

@@ -19,7 +19,6 @@ public class SearchingThread<K extends Comparable<K>,E> extends Thread{
 	}
 	@Override
 	public void run() {
-		
 		avlTree.searchValuesSensitiveR(array, node, key);
 	}
 }

@@ -1,14 +1,13 @@
 package data_structures;
 
 import java.io.Serializable;
+
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import threads.RunningThread;
-import threads.SearchingThread;
+import threads.*;
 
 
+@SuppressWarnings("serial")
 public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearchTree<K, E> , Serializable{
 	private Node<K,E> root;
 	private boolean searching;
@@ -393,15 +392,16 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 			searching = true;
 			
 			if(current.getHeight()>10) {
-				
 				SearchingThread<K,E> searchingThread1 = new SearchingThread<K,E>(this,current.getLeft(), key, array);
 				SearchingThread<K,E> searchingThread2 = new SearchingThread<K,E>(this,current.getRight(), key, array);
 				searchingThread1.start();
 				searchingThread2.start();
+				
 				RunningThread<K,E> rt = new RunningThread<>(this, searchingThread1,searchingThread2);
 				rt.start();
 				
 			}else {
+				
 				searchValuesSensitiveR(array,current,key);
 				stopSearch();
 			}
@@ -409,7 +409,7 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 		return array;
 	}
 	
-	private Node<K,E> searchValueSensitive(Node<K,E> root,K key){
+	/*private Node<K,E> searchValueSensitive(Node<K,E> root,K key){
 		if(root!=null && searching) {
 			int aux = root.startsWith(key);
 			if(aux==0) {
@@ -421,7 +421,7 @@ public class BinarySearchTree<K extends Comparable<K>,E> implements IBinarySearc
 			}
 		}
 		return null;
-	}
+	}*/
 	
 	public ArrayList<E> searchValuesSensitiveR(ArrayList<E> array,Node<K,E> root,K key){
 		if(root!=null && searching ) {
