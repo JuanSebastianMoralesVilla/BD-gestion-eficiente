@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 import custom_exceptions.InvalidValueException;
 import custom_exceptions.ValuesIsEmptyException;
@@ -133,9 +134,12 @@ public class DataBase {
 				throw new ValuesIsEmptyException();
 			}
 			if(stature<User.MIN_STATURE || stature>User.MAX_STATURE) {
+				JOptionPane.showMessageDialog(null, "Digite bien los campos indicados");
 				throw new InvalidValueException();
+			
 			}
 			if(dayOfBHD.compareTo(LocalDate.now())>0) {
+				
 				throw new InvalidValueException();
 			}
 			String id = generateID(nationality);
