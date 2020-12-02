@@ -9,29 +9,28 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.DataBase;
 
-public class Main  extends Application{
+public class Main extends Application {
 
 	private DataBaseGUI dbGUI;
 	private DataBase miDataBase;
-	
-	
-public Main() throws IOException {
-	// TODO Auto-generated constructor stub
-	
-	miDataBase= new DataBase();
+
+	public Main() throws IOException {
+		// TODO Auto-generated constructor stub
+
+		miDataBase = new DataBase();
 	}
-	
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-launch (args);
+		launch(args);
 	}
 
 	@Override
 	public void start(Stage stage) throws Exception {
 		// TODO Auto-generated method stub
-		
-		dbGUI= new DataBaseGUI(stage, miDataBase);
-		//FileInputStream fis = new FileInputStream("Images/");
+
+		dbGUI = new DataBaseGUI(stage, miDataBase);
+		// FileInputStream fis = new FileInputStream("Images/");
 		FXMLLoader f = new FXMLLoader(getClass().getResource("InterfazMenu.fxml"));
 		f.setController(dbGUI);
 		Parent root = f.load();
@@ -44,8 +43,7 @@ launch (args);
 		stage.setResizable(true);
 		stage.setTitle("BD VIP");
 		stage.show();
-		
-		
+
 	}
 
 }
