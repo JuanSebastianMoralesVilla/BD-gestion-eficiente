@@ -197,8 +197,8 @@ class AVLTreeTest {
 	@Test
 	void deleteTest5() {
 		setup6();
-		assertTrue(myTree.deleteValue(4), "el nodo no fue eliminado");
-		assertNull(myTree.searchValue(4));
+		assertTrue(myTree.deleteValue(2), "el nodo no fue eliminado");
+		assertNull(myTree.searchValue(2));
 
 	}
 
