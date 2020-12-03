@@ -4,10 +4,10 @@
 #### El proyecto fue desarrollado en java, el cual maneja diferentes estructuras de datos como AVLTREE Y BST.
 
 ## Documentacion
-#### https://github.com/JuanSebastianMoralesVilla/BD-gestion-eficiente/blob/master/documents/Documentacion%20TI2.pdf
+#### https://github.com/JuanSebastianMoralesVilla/BD-gestion-eficiente/blob/master/documents/Documentacion%20TI2%20(corregido).pdf
 
 ## Diagrama de clases
-#### https://github.com/JuanSebastianMoralesVilla/BD-gestion-eficiente/blob/master/documents/Class%20Diagram%20Complete.png
+#### https://github.com/JuanSebastianMoralesVilla/BD-gestion-eficiente/blob/master/documents/DIAGRAMA%20CORRECIONTI2.png
 
 ## INSTRUCCIONES DE USO
 ### 1. Ejecute el programa en eclipse
